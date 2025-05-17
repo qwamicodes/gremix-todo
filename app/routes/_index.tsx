@@ -1,18 +1,25 @@
 import type { MetaFunction } from "@remix-run/node";
+import { Header } from "~/components/header";
+import { StatusBar } from "~/components/status-bar";
+import { Todos } from "~/components/todos";
 
 export const meta: MetaFunction = () => {
 	return [
-		{ title: "Welcome to Greatness" },
+		{ title: "Get stuff done | TodoList" },
 		{ name: "description", content: "Just do it!" },
 	];
 };
 
 export default function Index() {
 	return (
-		<div className="h-screen flex items-center justify-center">
-			<div className="flex items-center gap-2">
-			 <div className="i-svg-spinners-270-ring" />	Do great stuff!
+		<div className="flex flex-col h-screen">
+			<Header />
+
+			<div className="flex-1 h-0">
+				<Todos />
 			</div>
+
+			<StatusBar />
 		</div>
 	);
 }
