@@ -12,3 +12,31 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  title       String
+  status      Status    @default(pending)
+  author      String
+  assignee    String
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  Comment     Comment[]
+}
+
+enum Status {
+  pending
+  inProgress
+  done
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  taskId    Int
+  task      Task     @relation(fields: [taskId], references: [id])
+  author    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

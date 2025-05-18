@@ -1,16 +1,16 @@
 import clsx from "clsx";
 import React from "react";
-import { CommentComposer } from "./comment-input";
+import { age } from "~/lib/dates";
+import type { Task } from "~/lib/types";
+import { TaskComments } from "./task-comments";
 
 // TODO: on hover the status bar should show who created the task and when
 
 interface Props {
-	title: string;
-	status: "todo" | "in-progress" | "done";
-	assignee: string;
+	task: Task;
 }
 
-export function TodoItem({ title, status, assignee }: Props) {
+export function TodoItem({ task }: Props) {
 	const [opened, setOpened] = React.useState(false);
 
 	return (
@@ -23,27 +23,31 @@ export function TodoItem({ title, status, assignee }: Props) {
 						setOpened(!opened);
 					}
 				}}
+				// biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation>
 				tabIndex={0}
 			>
 				<div
 					className={clsx(
 						"size-6 rounded-full border-2 border-stone-300 dark:border-neutral-700 flex items-center justify-center",
 						{
-							"!border-amber-500": status === "in-progress",
+							"!border-amber-500": task.status === "inProgress",
 						},
 					)}
 				>
-					{status === "done" && <div className="i-lucide-check opacity-50" />}
+					{task.status === "done" && (
+						<div className="i-lucide-check opacity-50" />
+					)}
 				</div>
 
 				<div className="flex-1">
 					<div className="flex items-center justify-between">
 						<div
 							className={clsx("font-medium", {
-								"line-through font-normal text-secondary": status === "done",
+								"line-through font-normal text-secondary":
+									task.status === "done",
 							})}
 						>
-							{title}
+							{task.title}
 						</div>
 					</div>
 				</div>
@@ -51,44 +55,22 @@ export function TodoItem({ title, status, assignee }: Props) {
 				<div className="flex gap-3 items-center">
 					<div className="flex items-center gap-1 text-sm font-mono text-secondary">
 						<img
-							src={`https://api.dicebear.com/9.x/dylan/svg?seed=${assignee}`}
+							src={`https://api.dicebear.com/9.x/dylan/svg?seed=${task.assignee}`}
 							className="rounded-full size-5 bg-blue-500"
-							alt={assignee}
+							alt={task.assignee}
 						/>{" "}
-						@{assignee}
+						@{task.assignee}
 					</div>
 
-					<div className="text-sm text-secondary">2h</div>
+					<div className="text-sm text-secondary">{age(task.createdAt)}</div>
 
 					<div className="flex gap-1 text-sm items-center text-secondary">
-						<div className="i-solar-chat-line-line-duotone" /> 2
+						<div className="i-solar-chat-line-line-duotone" /> {task.comments}
 					</div>
 				</div>
 			</div>
 
-			{opened && (
-				<ul className="border-t border-stone-200 dark:border-neutral-700/50">
-					<li>
-						<div className="flex flex-col gap-2 p-2 ms-10">
-							<div>
-								<header className="text-sm font-mono text-secondary">
-									@notgr &bull; 8.11pm
-								</header>
-								<p>
-									Please implement this feature without the redirect to the shop
-									site.
-								</p>
-							</div>
-						</div>
-					</li>
-
-					<li>
-						<div className="bg-stone-100 dark:bg-neutral-800 p-2 ps-12">
-							<CommentComposer />
-						</div>
-					</li>
-				</ul>
-			)}
+			<TaskComments opened={opened} taskId={task.id} />
 		</div>
 	);
 }

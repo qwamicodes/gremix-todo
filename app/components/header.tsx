@@ -3,10 +3,10 @@ import { Select } from "./select";
 
 export function Header() {
 	return (
-		<div className="flex justify-between items-center px-4 py-2 border-b dark:border-neutral-800">
+		<div className="flex justify-between items-center p-2 border-b dark:border-neutral-800">
 			<div className="flex gap-6 items-center">
 				<div>
-					<div className="i-solar-archive-minimalistic-bold-duotone p-2 text-rose-500 text-2xl" />
+					<div className="i-solar-archive-minimalistic-bold-duotone text-rose-500 text-2xl" />
 				</div>
 
 				<div className="flex rounded-full divide-x divide-stone-300/50 dark:divide-neutral-700/50 border dark:border-neutral-700/50 overflow-hidden">
