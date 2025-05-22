@@ -56,9 +56,9 @@ export function StatusMenu({
 	}
 
 	return (
-		<div className="bg-neutral-100 dark:bg-neutral-900 rounded-lg w-[14rem] border dark:border-neutral-800 overflow-hidden shadow-lg mt-1.5">
+		<div className="bg-neutral-100 text-sm dark:bg-neutral-900 rounded-lg w-12.5rem border dark:border-neutral-800 overflow-hidden shadow-lg mt-1.5">
 			<header className="px-2 py-2.5 flex items-center justify-start">
-				<div className="text-sm font-semibold ms-2 text-secondary">
+				<div className="font-semibold ms-2 text-secondary">
 					Change status...
 				</div>
 			</header>
@@ -93,25 +93,25 @@ export function StatusMenu({
 				))}
 			</ul>
 
-			<div className="text-sm font-semibold ms-3 text-secondary">Actions</div>
+			<div className="font-semibold ms-3 px-1.5 text-secondary">Actions</div>
 
 			<ul className="space-y-1 p-1">
 				<li className="font-mono">
 					{confirmingDelete ? (
 						<div className="flex justify-between items-center px-3 py-2 text-red-500 rounded-lg bg-red-100 dark:bg-red-800/10">
 							<span className="flex items-center gap-2">
-								<div className="i-solar-trash-bin-trash-linear" />
+								<div className="i-solar-trash-bin-trash-linear " />
 								Delete?
 							</span>
 							<div className="flex gap-2">
 								<button
 									type="button"
-									className="i-lucide-check w-5 h-5 text-red-500"
+									className="i-lucide-check w-5 h-5 text-red-500 animate-fade-in"
 									onClick={handleDeleteClick}
 								/>
 								<button
 									type="button"
-									className="i-lucide-x w-5 h-5 text-secondary"
+									className="i-lucide-x w-5 h-5 text-secondary animate-fade-in"
 									onClick={cancelDelete}
 								/>
 							</div>
@@ -122,7 +122,7 @@ export function StatusMenu({
 							className="w-full text-red-500 rounded-lg flex gap-2 items-center bg-transparent py-2 px-3 hover:bg-red-100 dark:hover:bg-red-800/10"
 							onClick={handleDeleteClick}
 						>
-							<div className="i-solar-trash-bin-trash-linear" />
+							<div className="i-solar-trash-bin-trash-bold" />
 							Delete
 						</button>
 					)}

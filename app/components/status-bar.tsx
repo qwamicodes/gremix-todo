@@ -1,5 +1,5 @@
-import { formatDate } from "date-fns";
 import { useAtom } from "jotai";
+import { authorTime } from "~/lib/dates";
 import { hoveredTask } from "~/lib/store";
 
 export function StatusBar() {
@@ -14,8 +14,8 @@ export function StatusBar() {
 				</div>
 				{task && (
 					<span>
-						· #{task.id} Created by @{task.author}{" "}
-						{formatDate(task.createdAt, "MMM d")}
+						&bull; #{task.id} Created by @{task.author} &bull;{" "}
+						{authorTime(task.createdAt)}
 					</span>
 				)}
 			</div>

@@ -14,14 +14,14 @@ function Assignee({ task }: AssigneeProps) {
 	const { update } = useTasks();
 
 	const handleUpdate = (taskId: number, updates: Partial<Task>) => {
-		update.mutate({ taskId, updates });
-
-		if (updates.assignee) {
-			setIsPopoverOpen(false);
-			return;
-		}
-
-		setIsPopoverOpen(false);
+		update.mutate(
+			{ taskId, updates },
+			{
+				onSuccess: () => {
+					setIsPopoverOpen(false);
+				},
+			},
+		);
 	};
 
 	return (

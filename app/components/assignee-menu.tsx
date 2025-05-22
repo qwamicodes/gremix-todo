@@ -12,9 +12,9 @@ function AssigneeMenu({ onTeamMemberSelect, assignee }: AssigneeMenuProps) {
 	];
 
 	return (
-		<div className="bg-neutral-100 dark:bg-neutral-900 rounded-lg w-[16rem] border dark:border-neutral-800 overflow-hidden shadow-lg mt-1.5">
+		<div className="bg-neutral-100 text-sm dark:bg-neutral-900 rounded-lg w-12.5rem border dark:border-neutral-800 overflow-hidden shadow-lg mt-1.5">
 			<header className="px-2 py-2.5 flex items-center justify-start">
-				<div className="text-sm font-semibold ms-2 text-secondary">
+				<div className="font-semibold ms-2 text-secondary">
 					{/* TODO: make this an input to search team members*/}
 					Assign to...
 				</div>
@@ -38,7 +38,7 @@ function AssigneeMenu({ onTeamMemberSelect, assignee }: AssigneeMenuProps) {
 				</div>
 			</div>
 
-			<div className="text-sm font-semibold ms-3 text-secondary">
+			<div className="font-semibold ms-3 px-1.5 text-secondary">
 				Team members
 			</div>
 

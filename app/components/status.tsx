@@ -15,14 +15,14 @@ function Status({ task }: StatusProps) {
 	const { update, remove } = useTasks();
 
 	const handleUpdate = (taskId: number, updates: Partial<Task>) => {
-		update.mutate({ taskId, updates });
-
-		if (updates.assignee) {
-			setIsPopoverOpen(false);
-			return;
-		}
-
-		setIsPopoverOpen(false);
+		update.mutate(
+			{ taskId, updates },
+			{
+				onSuccess: () => {
+					setIsPopoverOpen(false);
+				},
+			},
+		);
 	};
 
 	const handleDelete = (taskId: number) => {
@@ -32,7 +32,7 @@ function Status({ task }: StatusProps) {
 	const StatusIcons: Record<Task["status"], string> = {
 		pending: "i-lucide-circle text-secondary",
 		inProgress: "i-lucide-loader-circle text-amber-500",
-		done: "i-solar-check-circle-bold text-indigo-500",
+		done: "i-solar-check-circle-linear text-stone-400 dark:text-neutral-700",
 	};
 
 	return (
@@ -46,7 +46,7 @@ function Status({ task }: StatusProps) {
 					data-status-button
 					type="button"
 					className={clsx(
-						"size-5 rounded-full border border-stone-300 bg-transparent dark:border-neutral-700 flex items-center justify-center",
+						"rounded-full bg-transparent flex items-center justify-center",
 					)}
 					onClick={(e) => {
 						e.stopPropagation();

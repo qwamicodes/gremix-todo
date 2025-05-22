@@ -16,7 +16,7 @@ export function TaskComments({ opened, taskId }: Props) {
 		<ul className="border-t border-stone-200 dark:border-neutral-700/50">
 			{comments.map((comment) => (
 				<li key={comment.id}>
-					<div className="flex flex-col gap-2 p-2 ms-5 ps-7 border-s-2 border-stone-200/60 dark:border-neutral-700">
+					<div className="flex flex-col p-1 ms-5 ps-7 border-s-2 border-stone-200/60 dark:border-neutral-700">
 						<header className="text-sm font-mono text-secondary">
 							@{comment.author} &bull; {authorTime(comment.createdAt)}
 						</header>
