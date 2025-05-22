@@ -55,7 +55,7 @@ export async function updateTaskRequest({
 		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify({ taskId, ...updates }),
 	});
-	
+
 	const data = await res.json();
 
 	return data.task;
