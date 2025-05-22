@@ -1,0 +1,79 @@
+import clsx from "clsx";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover";
+import { StatusMenu } from "./status-menu";
+import type { Task } from "~/lib/types";
+import { useTasks } from "~/lib/use-tasks";
+import React from "react";
+
+interface StatusProps {
+	task: Task;
+}
+
+function Status({ task }: StatusProps) {
+	const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
+
+	const { update, remove } = useTasks();
+
+	const handleUpdate = (taskId: number, updates: Partial<Task>) => {
+		update.mutate({ taskId, updates });
+
+		if (updates.assignee) {
+			setIsPopoverOpen(false);
+			return;
+		}
+
+		setIsPopoverOpen(false);
+	};
+
+	const handleDelete = (taskId: number) => {
+		remove.mutate(taskId);
+	};
+
+	const StatusIcons: Record<Task["status"], string> = {
+		pending: "i-lucide-circle text-secondary",
+		inProgress: "i-lucide-loader-circle text-amber-500",
+		done: "i-solar-check-circle-bold text-indigo-500",
+	};
+
+	return (
+		<Popover
+			open={isPopoverOpen}
+			onOpenChange={setIsPopoverOpen}
+			placement="bottom-start"
+		>
+			<PopoverTrigger asChild>
+				<button
+					data-status-button
+					type="button"
+					className={clsx(
+						"size-5 rounded-full border border-stone-300 bg-transparent dark:border-neutral-700 flex items-center justify-center",
+					)}
+					onClick={(e) => {
+						e.stopPropagation();
+						setIsPopoverOpen(!isPopoverOpen);
+					}}
+					onKeyDown={(e) => {
+						e.stopPropagation();
+						if (e.key === "Enter" || e.key === " ") {
+							e.preventDefault();
+							setIsPopoverOpen(!isPopoverOpen);
+						}
+					}}
+				>
+					<div className={clsx(StatusIcons[task.status], "size-5")} />
+				</button>
+			</PopoverTrigger>
+			<PopoverContent className="z-50 popover-content">
+				<StatusMenu
+					status={task.status}
+					onStatusSelect={(newStatus) =>
+						handleUpdate(task.id, { status: newStatus })
+					}
+					onDelete={() => handleDelete(task.id)}
+				/>
+			</PopoverContent>
+		</Popover>
+	);
+}
+
+export { Status };

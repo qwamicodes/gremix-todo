@@ -1,4 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { cleanUpdate } from "~/lib/clean-update";
 import { prisma } from "~/lib/prisma.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -37,9 +38,32 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-	const data = await request.json();
+	if (request.method === "DELETE") {
+		const { taskId: id } = await request.json();
 
-	const task = await prisma.task.create({ data });
+		return await prisma.task.delete({
+			where: {
+				id,
+			},
+		});
+	}
 
-	return { task };
+	if (request.method === "PATCH") {
+		const { id, updates } = cleanUpdate(await request.json());
+
+		const task = await prisma.task.update({
+			where: { id },
+			data: updates,
+		});
+
+		return { task };
+	}
+
+	if (request.method === "POST") {
+		const data = await request.json();
+
+		const task = await prisma.task.create({ data });
+
+		return { task };
+	}
 };

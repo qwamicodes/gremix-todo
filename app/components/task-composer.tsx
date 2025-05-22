@@ -1,45 +1,36 @@
-import type { Task } from "@prisma/client";
 import React from "react";
+import { useTasks } from "~/lib/use-tasks";
 
-interface Props {
-	onNewEntry: (task: Task) => void;
-}
-
-export function TaskComposer({ onNewEntry }: Props) {
+export function TaskComposer() {
 	const [inProgress, setInProgress] = React.useState(false);
 
 	const formRef = React.useRef<HTMLFormElement>(null);
 	const inputRef = React.useRef<HTMLInputElement>(null);
 
+	const { create } = useTasks();
+
 	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
-		setInProgress(true);
 
 		const formData = new FormData(event.currentTarget);
 		const title = formData.get("title") as string;
 
-		try {
-			const res = await fetch("/list", {
-				method: "POST",
-				body: JSON.stringify({ title, assignee: "notgr", author: "notgr" }),
-				headers: {
-					"Content-Type": "application/json",
+		if (!title.trim()) return;
+
+		setInProgress(true);
+
+		create.mutate(
+			{ title, assignee: "notgr", author: "notgr" },
+			{
+				onSuccess: () => {
+					formRef.current?.reset();
+					inputRef.current?.focus();
 				},
-			});
-
-			if (!res.ok) {
-				console.error(res);
-				return;
-			}
-
-			const data = await res.json();
-			onNewEntry(data.task);
-
-			formRef.current?.reset();
-			inputRef.current?.focus();
-		} finally {
-			setInProgress(false);
-		}
+				onSettled: () => {
+					setInProgress(false);
+				},
+			},
+		);
 	}
 
 	return (
@@ -56,7 +47,7 @@ export function TaskComposer({ onNewEntry }: Props) {
 				type="text"
 				placeholder="What needs done?"
 				name="title"
-				className="w-full .font-medium bg-transparent border-none outline-none focus:outline-none focus:ring-0 p-0"
+				className="w-full font-medium bg-transparent border-none outline-none focus:outline-none focus:ring-0 p-0"
 				disabled={inProgress}
 				ref={inputRef}
 			/>
