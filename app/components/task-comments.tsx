@@ -1,6 +1,6 @@
 import { useComments } from "~/lib/use-comments";
 import { CommentComposer } from "./comment-composer";
-import { TComment } from "./task-comment";
+import { TaskComment } from "./task-comment";
 
 interface Props {
 	opened: boolean;
@@ -15,7 +15,7 @@ export function TaskComments({ opened, taskId }: Props) {
 	return (
 		<ul className="border-t border-stone-200 dark:border-neutral-700/50">
 			{comments.map((comment) => (
-				<TComment
+				<TaskComment
 					key={comment.id}
 					comment={comment}
 					onDelete={() => remove.mutate(comment.id)}

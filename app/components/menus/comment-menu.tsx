@@ -27,8 +27,16 @@ export function CommentMenu({ onDelete }: CommentMenuProps) {
 		setConfirmingDelete(false);
 	}
 
+	const handleOpenChange = (isOpen: boolean) => {
+		setOpen(isOpen);
+		
+		if (!isOpen) {
+			setConfirmingDelete(false);
+		}
+	};
+
 	return (
-		<Popover open={open} onOpenChange={setOpen} placement="bottom-end">
+		<Popover open={open} onOpenChange={handleOpenChange} placement="bottom-end">
 			<PopoverTrigger asChild>
 				<button
 					type="button"

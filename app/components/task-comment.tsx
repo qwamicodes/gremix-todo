@@ -2,12 +2,12 @@ import { authorTime } from "~/lib/dates";
 import { CommentMenu } from "./menus/comment-menu";
 import type { Comment } from "~/lib/types";
 
-interface TCommentProps {
+interface TaskCommentProps {
 	comment: Comment;
 	onDelete: () => void;
 }
 
-function TComment({ comment, onDelete }: TCommentProps) {
+function TaskComment({ comment, onDelete }: TaskCommentProps) {
 	return (
 		<li>
 			<div className="flex flex-col gap-2 p-2 ms-5 ps-7 border-s-2 border-stone-200/60 dark:border-neutral-700">
@@ -33,4 +33,4 @@ function TComment({ comment, onDelete }: TCommentProps) {
 	);
 }
 
-export { TComment };
+export { TaskComment };
