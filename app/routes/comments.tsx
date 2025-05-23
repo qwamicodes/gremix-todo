@@ -23,9 +23,26 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
+	if (request.method === "DELETE") {
+		const { id } = await request.json();
+
+		if (!id) throw badRequest({ error: "id is required" });
+
+		const comment = await prisma.comment.update({
+			where: {
+				id,
+			},
+			data: {
+				deletedAt: new Date(),
+			},
+		});
+
+		return { comment };
+	}
+
 	const data = await request.json();
 
 	const comment = await prisma.comment.create({ data });
 
-  return { comment };
+	return { comment };
 }

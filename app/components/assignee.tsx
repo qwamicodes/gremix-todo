@@ -1,5 +1,5 @@
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
-import { AssigneeMenu } from "./assignee-menu";
+import { AssigneeMenu } from "./menus/assignee-menu";
 import type { Task } from "~/lib/types";
 import React from "react";
 import { useTasks } from "~/lib/use-tasks";
@@ -9,7 +9,7 @@ interface AssigneeProps {
 }
 
 function Assignee({ task }: AssigneeProps) {
-	const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
+	const [isOpen, setisOpen] = React.useState(false);
 
 	const { update } = useTasks();
 
@@ -18,18 +18,14 @@ function Assignee({ task }: AssigneeProps) {
 			{ taskId, updates },
 			{
 				onSuccess: () => {
-					setIsPopoverOpen(false);
+					setisOpen(false);
 				},
 			},
 		);
 	};
 
 	return (
-		<Popover
-			open={isPopoverOpen}
-			onOpenChange={setIsPopoverOpen}
-			placement="bottom-end"
-		>
+		<Popover open={isOpen} onOpenChange={setisOpen} placement="bottom-end">
 			<PopoverTrigger asChild>
 				<button
 					data-assignee-button
@@ -37,13 +33,13 @@ function Assignee({ task }: AssigneeProps) {
 					className="flex items-center gap-1 bg-transparent text-sm font-mono text-secondary"
 					onClick={(e) => {
 						e.stopPropagation();
-						setIsPopoverOpen(!isPopoverOpen);
+						setisOpen(!isOpen);
 					}}
 					onKeyDown={(e) => {
 						e.stopPropagation();
 						if (e.key === "Enter" || e.key === " ") {
 							e.preventDefault();
-							setIsPopoverOpen(!isPopoverOpen);
+							setisOpen(!isOpen);
 						}
 					}}
 				>

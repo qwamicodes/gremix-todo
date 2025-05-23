@@ -1,6 +1,7 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { cleanUpdate } from "~/lib/clean-update";
 import { prisma } from "~/lib/prisma.server";
+import { badRequest } from "~/lib/responses";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const url = new URL(request.url);
@@ -40,6 +41,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export const action = async ({ request }: ActionFunctionArgs) => {
 	if (request.method === "DELETE") {
 		const { taskId: id } = await request.json();
+
+		if (!id) throw badRequest({ error: "taskId is required" });
 
 		return await prisma.task.delete({
 			where: {

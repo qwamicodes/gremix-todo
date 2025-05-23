@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
-import { StatusMenu } from "./status-menu";
+import { StatusMenu } from "./menus/status-menu";
 import type { Task } from "~/lib/types";
 import { useTasks } from "~/lib/use-tasks";
 import React from "react";
@@ -10,7 +10,7 @@ interface StatusProps {
 }
 
 function Status({ task }: StatusProps) {
-	const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
+	const [isOpen, setisOpen] = React.useState(false);
 
 	const { update, remove } = useTasks();
 
@@ -19,7 +19,7 @@ function Status({ task }: StatusProps) {
 			{ taskId, updates },
 			{
 				onSuccess: () => {
-					setIsPopoverOpen(false);
+					setisOpen(false);
 				},
 			},
 		);
@@ -36,11 +36,7 @@ function Status({ task }: StatusProps) {
 	};
 
 	return (
-		<Popover
-			open={isPopoverOpen}
-			onOpenChange={setIsPopoverOpen}
-			placement="bottom-start"
-		>
+		<Popover open={isOpen} onOpenChange={setisOpen} placement="bottom-start">
 			<PopoverTrigger asChild>
 				<button
 					data-status-button
@@ -50,13 +46,13 @@ function Status({ task }: StatusProps) {
 					)}
 					onClick={(e) => {
 						e.stopPropagation();
-						setIsPopoverOpen(!isPopoverOpen);
+						setisOpen(!isOpen);
 					}}
 					onKeyDown={(e) => {
 						e.stopPropagation();
 						if (e.key === "Enter" || e.key === " ") {
 							e.preventDefault();
-							setIsPopoverOpen(!isPopoverOpen);
+							setisOpen(!isOpen);
 						}
 					}}
 				>
