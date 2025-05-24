@@ -46,7 +46,7 @@ export function EditTaskInput({
 				<button
 					type="button"
 					onClick={(e) => {
-						e.stopPropagation();
+							e.stopPropagation();
 						onConfirm();
 					}}
 					className="i-lucide-check text-green-600 dark:text-green-400 w-5 h-5"

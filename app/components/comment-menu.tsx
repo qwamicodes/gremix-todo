@@ -31,16 +31,6 @@ function Menu({ onDelete, onEdit }: Props) {
 	const [confirmingDelete, setConfirmingDelete] = React.useState(false);
 	const popover = usePopoverContext();
 
-	function handleDeleteClick(e: React.MouseEvent) {
-		e.stopPropagation();
-		setConfirmingDelete(true);
-	}
-
-	function cancelDelete(e: React.MouseEvent) {
-		e.stopPropagation();
-		setConfirmingDelete(false);
-	}
-
 	return (
 		<div className="bg-neutral-100 text-sm font-mono dark:bg-neutral-900 rounded-lg w-12.5rem border dark:border-neutral-800 overflow-hidden shadow-lg mt-1.5">
 			<ul className="space-y-1 p-1">
@@ -73,7 +63,7 @@ function Menu({ onDelete, onEdit }: Props) {
 								<button
 									type="button"
 									className="i-lucide-x w-5 h-5 text-secondary animate-fade-in"
-									onClick={cancelDelete}
+									onClick={() => setConfirmingDelete(false)}
 								/>
 							</div>
 						</div>
@@ -81,7 +71,7 @@ function Menu({ onDelete, onEdit }: Props) {
 						<button
 							type="button"
 							className="w-full text-red-500 rounded-lg flex gap-2 items-center bg-transparent py-2 px-3 hover:bg-red-100 dark:hover:bg-red-800/10"
-							onClick={handleDeleteClick}
+							onClick={() => setConfirmingDelete(true)}
 						>
 							<div className="i-solar-trash-bin-trash-linear" />
 							Delete

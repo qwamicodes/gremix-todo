@@ -1,6 +1,5 @@
 import { useLoaderData } from "@remix-run/react";
 import type { Task } from "~/lib/types";
-import { useTaskUpdate } from "~/lib/use-task-update";
 import type { loader } from "~/routes/_index";
 import { AssigneeMenu } from "./assignee-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
@@ -12,7 +11,6 @@ interface AssigneeProps {
 
 function Assignee({ task }: AssigneeProps) {
 	const { user } = useLoaderData<typeof loader>();
-	const update = useTaskUpdate(task);
 
 	return (
 		<Popover placement="bottom-end">
@@ -42,12 +40,7 @@ function Assignee({ task }: AssigneeProps) {
 				onClick={(e) => e.stopPropagation()}
 				className="z-50 animate-fade-in animate-duration-200"
 			>
-				<AssigneeMenu
-					task={task}
-					onAssigneeUpdate={(assignee) =>
-						update.mutate({ assigneeId: assignee })
-					}
-				/>
+				<AssigneeMenu task={task} />
 			</PopoverContent>
 		</Popover>
 	);

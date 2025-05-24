@@ -2,11 +2,11 @@ import type { Status, Task } from "@prisma/client";
 import clsx from "clsx";
 import React from "react";
 import { usePopoverContext } from "./popover";
+import { useTaskDelete } from "~/lib/use-task-delete";
 
 interface StatusMenuProps {
 	task: Task;
 	onStatusUpdate: (status: Status) => void;
-	onDelete: () => void;
 }
 
 interface StatusProps {
@@ -33,28 +33,15 @@ const statuses: StatusProps[] = [
 	},
 ];
 
-export function StatusMenu({
-	task,
-	onDelete,
-	onStatusUpdate,
-}: StatusMenuProps) {
+export function StatusMenu({ task, onStatusUpdate }: StatusMenuProps) {
 	const [confirmingDelete, setConfirmingDelete] = React.useState(false);
+	const remove = useTaskDelete(task);
 
 	const popover = usePopoverContext();
 
 	function handleUpdate(status: Status) {
 		popover.setOpen(false);
 		onStatusUpdate(status);
-	}
-
-	function handleDeleteClick(e: React.MouseEvent) {
-		e.stopPropagation();
-		setConfirmingDelete(true);
-	}
-
-	function cancelDelete(e: React.MouseEvent) {
-		e.stopPropagation();
-		setConfirmingDelete(false);
 	}
 
 	return (
@@ -82,10 +69,7 @@ export function StatusMenu({
 						<button
 							type="button"
 							className="w-full flex items-center justify-between py-2 px-3 bg-transparent font-mono"
-							onClick={(e) => {
-								e.stopPropagation();
-								handleUpdate(s.id);
-							}}
+							onClick={() => handleUpdate(s.id)}
 						>
 							<span>{s.label}</span>
 							{s.id === task.status && (
@@ -110,12 +94,12 @@ export function StatusMenu({
 								<button
 									type="button"
 									className="i-lucide-check w-5 h-5 text-red-500 animate-fade-in"
-									onClick={onDelete}
+									onClick={() => remove.mutate()}
 								/>
 								<button
 									type="button"
 									className="i-lucide-x w-5 h-5 text-secondary animate-fade-in"
-									onClick={cancelDelete}
+									onClick={() => setConfirmingDelete(false)}
 								/>
 							</div>
 						</div>
@@ -123,7 +107,7 @@ export function StatusMenu({
 						<button
 							type="button"
 							className="w-full text-red-500 rounded-lg flex gap-2 items-center bg-transparent py-2 px-3 hover:bg-red-100 dark:hover:bg-red-800/10"
-							onClick={handleDeleteClick}
+							onClick={() => setConfirmingDelete(true)}
 						>
 							<div className="i-solar-trash-bin-trash-linear" />
 							Delete
