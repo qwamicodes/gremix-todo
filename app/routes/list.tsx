@@ -85,7 +85,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 			data: updates,
 		});
 
-		if (previousAssigneeId !== updates.assigneeId) {
+		if (
+			previousAssigneeId !== updates.assigneeId &&
+			updates.assigneeId !== user.id // don't notify self
+		) {
 			await prisma.notification.create({
 				data: {
 					message: `You have been assigned to task @[task/${id}] by @[user/${user.id}]`,
