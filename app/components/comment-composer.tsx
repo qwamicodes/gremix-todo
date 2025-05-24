@@ -1,39 +1,26 @@
-import type { Comment } from "~/lib/types";
+import React from "react";
+import { useComments } from "~/lib/use-comments";
 
 interface Props {
-	onAdd: (comment: Comment) => void;
 	taskId: number;
 }
 
-export function CommentComposer({ onAdd, taskId }: Props) {
-	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault();
+export function CommentComposer({ taskId }: Props) {
+	const { create } = useComments(taskId);
+	const inputRef = React.useRef<HTMLTextAreaElement>(null);
 
-		const formData = new FormData(e.target as HTMLFormElement);
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		const form = e.currentTarget;
+		const formData = new FormData(form);
 		const content = formData.get("content") as string;
 
-		if (!content.trim().length) return;
+		if (!content.trim()) return;
 
-		const res = await fetch("/comments", {
-			method: "POST",
-			body: JSON.stringify({
-				content: content.trim(),
-				taskId,
-				author: "ebarthur",
-			}),
-			headers: { "Content-Type": "application/json" },
-		});
-
-		if (!res.ok) {
-			console.error(res);
-			return;
-		}
-
-		const data = await res.json();
-		onAdd(data.comment);
-
-		(e.target as HTMLFormElement).reset();
-	}
+		create.mutate({ taskId, content: content.trim(), author: "notgr" });
+		form.reset();
+		inputRef.current?.focus();
+	};
 
 	return (
 		<form
@@ -50,6 +37,7 @@ export function CommentComposer({ onAdd, taskId }: Props) {
 				placeholder="Add a comment"
 				name="content"
 				rows={3}
+				ref={inputRef}
 			/>
 
 			<div className="text-sm text-secondary flex justify-between gap-4">
@@ -60,7 +48,7 @@ export function CommentComposer({ onAdd, taskId }: Props) {
 
 				<button
 					type="submit"
-					className="flex gap-2 items-center bg-stone-300/60 px-2 rounded-full"
+					className="flex gap-2 items-center bg-stone-300/60 dark:bg-neutral-700 px-2 rounded-full"
 				>
 					<div className="i-solar-command-linear" /> + Enter to send
 				</button>

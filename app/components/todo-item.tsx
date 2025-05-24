@@ -1,10 +1,12 @@
 import clsx from "clsx";
 import React from "react";
-import { age } from "~/lib/dates";
 import type { Task } from "~/lib/types";
+import { age } from "~/lib/dates";
 import { TaskComments } from "./task-comments";
-
-// TODO: on hover the status bar should show who created the task and when
+import { Status } from "./status";
+import { Assignee } from "./assignee";
+import { useAtom } from "jotai";
+import { hoveredTask } from "~/lib/store";
 
 interface Props {
 	task: Task;
@@ -13,31 +15,38 @@ interface Props {
 export function TodoItem({ task }: Props) {
 	const [opened, setOpened] = React.useState(false);
 
+	const [, setHoveredTask] = useAtom(hoveredTask);
+
+	const handleToggleOpen = (e: React.MouseEvent | React.KeyboardEvent) => {
+		if (
+			e.target instanceof HTMLElement &&
+			(e.target.closest("[data-assignee-button]") ||
+				e.target.closest("[data-status-button]") ||
+				e.target.closest(".popover-content"))
+		) {
+			return;
+		}
+		setOpened(!opened);
+	};
+
 	return (
 		<div>
 			<div
 				className="flex items-center gap-4 p-2 hover:bg-stone-200 dark:hover:bg-neutral-800 focus:bg-stone-200 dark:focus:bg-neutral-800 cursor-pointer"
-				onClick={() => setOpened(!opened)}
+				onClick={handleToggleOpen}
 				onKeyDown={(e) => {
 					if (e.key === "Enter") {
-						setOpened(!opened);
+						handleToggleOpen(e);
 					}
 				}}
+				onMouseEnter={() => {
+					setHoveredTask(task);
+				}}
+				onMouseLeave={() => setHoveredTask(undefined)}
 				// biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation>
 				tabIndex={0}
 			>
-				<div
-					className={clsx(
-						"size-6 rounded-full border-2 border-stone-300 dark:border-neutral-700 flex items-center justify-center",
-						{
-							"!border-amber-500": task.status === "inProgress",
-						},
-					)}
-				>
-					{task.status === "done" && (
-						<div className="i-lucide-check opacity-50" />
-					)}
-				</div>
+				<Status task={task} />
 
 				<div className="flex-1">
 					<div className="flex items-center justify-between">
@@ -53,14 +62,7 @@ export function TodoItem({ task }: Props) {
 				</div>
 
 				<div className="flex gap-3 items-center">
-					<div className="flex items-center gap-1 text-sm font-mono text-secondary">
-						<img
-							src={`https://api.dicebear.com/9.x/dylan/svg?seed=${task.assignee}`}
-							className="rounded-full size-5 bg-blue-500"
-							alt={task.assignee}
-						/>{" "}
-						@{task.assignee}
-					</div>
+					<Assignee task={task} />
 
 					<div className="text-sm text-secondary">{age(task.createdAt)}</div>
 
