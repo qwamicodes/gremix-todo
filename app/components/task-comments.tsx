@@ -1,7 +1,6 @@
 import { useComments } from "~/lib/use-comments";
 import { CommentComposer } from "./comment-composer";
 import { TaskComment } from "./task-comment";
-import { useCommentDelete } from "~/lib/use-comment-delete";
 
 interface Props {
 	opened: boolean;
@@ -15,19 +14,14 @@ export function TaskComments({ opened, taskId }: Props) {
 
 	return (
 		<ul className="border-t border-stone-200 dark:border-neutral-700/50">
-			{status === "pending" ? (
+			{comments.map((comment) => (
+				<TaskComment key={comment.id} taskId={taskId} comment={comment} />
+			))}
+
+			{status === "pending" && (
 				<li className="flex justify-center items-center py-2">
 					<div className="i-svg-spinners:3-dots-fade" />
 				</li>
-			) : (
-				comments.map((comment) => (
-					<li key={comment.id}>
-						<TaskComment
-							taskId={taskId}
-							comment={comment}
-						/>
-					</li>
-				))
 			)}
 
 			<li>

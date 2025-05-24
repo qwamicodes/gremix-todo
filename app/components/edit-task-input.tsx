@@ -41,6 +41,7 @@ export function EditTaskInput({
 				onKeyDown={handleKeyDown}
 				className="px-2 py-0 font-medium border-b border-0 bg-transparent dark:border-neutral-700 w-full bg-stone-200/40 focus:outline-none focus:ring-0"
 			/>
+
 			<div className="flex gap-2 items-center">
 				<button
 					type="button"
