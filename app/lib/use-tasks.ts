@@ -12,7 +12,8 @@ export function useTasks() {
 	const tasksQuery = useInfiniteQuery({
 		queryKey: ["tasks"],
 		queryFn: fetchTasks,
-		getNextPageParam: (_, pages) => pages.length,
+		getNextPageParam: (lastPage, pages) =>
+			lastPage.length === 0 ? undefined : pages.length,
 		initialPageParam: 0,
 		staleTime: 1000 * 60 * 5,
 	});
