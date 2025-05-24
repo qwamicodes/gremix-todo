@@ -32,7 +32,7 @@ export function TodoItem({ task }: Props) {
 	return (
 		<div>
 			<div
-				className="flex items-center gap-4 p-2 hover:bg-stone-200/50 dark:hover:bg-neutral-800/50 focus:bg-stone-200/50 dark:focus:bg-neutral-800 cursor-pointer"
+				className="group flex items-center gap-4 p-2 hover:bg-stone-200/50 dark:hover:bg-neutral-800/50 focus:bg-stone-200/50 dark:focus:bg-neutral-800 cursor-pointer"
 				onClick={handleToggleOpen}
 				onKeyDown={(e) => {
 					if (e.key === "Enter") {
@@ -56,7 +56,10 @@ export function TodoItem({ task }: Props) {
 									task.status === "done",
 							})}
 						>
-							{task.title}
+							{task.title}{" "}
+							<span className="text-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+								#{task.id}
+							</span>
 						</div>
 					</div>
 				</div>

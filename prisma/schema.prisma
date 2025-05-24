@@ -46,13 +46,32 @@ model Comment {
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  username    String    @unique
-  password    String
-  superUser   Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  Comment     Comment[]
-  Tasks       Task[]    @relation("author")
-  Assignments Task[]    @relation("assignee")
+  id           Int            @id @default(autoincrement())
+  username     String         @unique
+  password     String
+  superUser    Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Comment      Comment[]
+  Tasks        Task[]         @relation("author")
+  Assignments  Task[]         @relation("assignee")
+  Notification Notification[]
+}
+
+model Notification {
+  id        Int              @id @default(autoincrement())
+  message   String
+  user      User             @relation(fields: [userId], references: [id])
+  type      NotificationType
+  meta      Json
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  userId    Int
+}
+
+enum NotificationType {
+  comment
+  assignment
+  generic
 }

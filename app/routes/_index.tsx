@@ -27,7 +27,20 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 		FROM "Task"
 	`) satisfies { total: bigint; done: bigint }[];
 
-	return { done: Number(done), total: Number(total), user, users };
+	const unreadNotifications = await prisma.notification.count({
+		where: {
+			userId: user.id,
+			read: false,
+		},
+	});
+
+	return {
+		done: Number(done),
+		total: Number(total),
+		user,
+		users,
+		unreadNotifications,
+	};
 };
 
 export const meta: MetaFunction = () => {
