@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import type { Task } from "~/lib/types";
-import { useTaskDelete } from "~/lib/use-task-delete";
 import { useTaskUpdate } from "~/lib/use-task-update";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { StatusMenu } from "./status-menu";
@@ -17,13 +16,14 @@ const StatusIcons: Record<Task["status"], string> = {
 
 function Status({ task }: StatusProps) {
 	const update = useTaskUpdate(task);
-	const remove = useTaskDelete(task);
 
 	return (
 		<Popover placement="bottom-start">
-			<PopoverTrigger className="bg-transparent">
+			<PopoverTrigger
+				onClick={(e) => e.stopPropagation()}
+				className="bg-transparent"
+			>
 				<div
-					data-status-button
 					className={clsx(
 						"rounded-full bg-transparent flex items-center justify-center",
 					)}
@@ -35,11 +35,13 @@ function Status({ task }: StatusProps) {
 					/>
 				</div>
 			</PopoverTrigger>
-			<PopoverContent className="z-50 popover-content animate-fade-in animate-duration-200">
+			<PopoverContent
+				onClick={(e) => e.stopPropagation()}
+				className="z-50 animate-fade-in animate-duration-200"
+			>
 				<StatusMenu
 					task={task}
 					onStatusUpdate={(status) => update.mutate({ status })}
-					onDelete={() => remove.mutate()}
 				/>
 			</PopoverContent>
 		</Popover>

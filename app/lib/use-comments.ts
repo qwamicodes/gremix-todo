@@ -10,19 +10,6 @@ export async function fetchComments(taskId: number): Promise<Comment[]> {
 	return data.comments;
 }
 
-export async function deleteComment(id: number): Promise<Comment> {
-	const res = await fetch("/comments", {
-		method: "DELETE",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({ id }),
-	});
-
-	if (!res.ok) throw new Error("Failed to delete comment");
-	const data = await res.json();
-
-	return data.comment;
-}
-
 type CreatePayload = Pick<Comment, "taskId" | "content" | "authorId">;
 
 export async function createComment(payload: CreatePayload): Promise<Comment> {
@@ -55,13 +42,5 @@ export function useComments(taskId: number, enabled = false) {
 		},
 	});
 
-	const remove = useMutation({
-		mutationFn: deleteComment,
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["comments", taskId] });
-			queryClient.invalidateQueries({ queryKey: ["tasks"] });
-		},
-	});
-
-	return { ...query, create, remove };
+	return { ...query, create };
 }

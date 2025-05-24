@@ -15,7 +15,6 @@ async function checkAuth(request: Request) {
 		});
 
 		if (!user) throw new Error("User not found");
-
 		return user;
 	} catch (err) {
 		console.error(err);

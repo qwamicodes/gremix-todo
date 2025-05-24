@@ -3,20 +3,22 @@ import clsx from "clsx";
 import type { Task } from "~/lib/types";
 import type { loader } from "~/routes/_index";
 import { usePopoverContext } from "./popover";
+import { useTaskUpdate } from "~/lib/use-task-update";
 
 interface AssigneeMenuProps {
 	task: Task;
-	onAssigneeUpdate: (assignee: number) => void;
 }
 
-function AssigneeMenu({ task, onAssigneeUpdate }: AssigneeMenuProps) {
+function AssigneeMenu({ task }: AssigneeMenuProps) {
 	const { users: team } = useLoaderData<typeof loader>();
+
+	const update = useTaskUpdate(task);
 
 	const popover = usePopoverContext();
 
 	function handleUpdate(assignee: number) {
 		popover.setOpen(false);
-		onAssigneeUpdate(assignee);
+		update.mutate({ assigneeId: assignee });
 	}
 
 	const restOfTeam = team.filter((t) => t.id !== task.assigneeId);
@@ -59,10 +61,7 @@ function AssigneeMenu({ task, onAssigneeUpdate }: AssigneeMenuProps) {
 						<button
 							type="button"
 							className="w-full rounded-lg flex gap-2 items-center bg-transparent py-2 px-3 font-mono hover:bg-neutral-200/80 dark:hover:bg-neutral-800/20"
-							onClick={(e) => {
-								e.stopPropagation();
-								handleUpdate(t.id);
-							}}
+							onClick={(e) => handleUpdate(t.id)}
 						>
 							<img
 								src={`https://api.dicebear.com/9.x/dylan/svg?seed=${t.username}`}

@@ -1,4 +1,4 @@
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useRevalidator } from "@remix-run/react";
 import React from "react";
 import { useTasks } from "~/lib/use-tasks";
 import type { loader } from "~/routes/_index";
@@ -10,6 +10,7 @@ export function TaskComposer() {
 	const inputRef = React.useRef<HTMLInputElement>(null);
 
 	const { create } = useTasks();
+	const { revalidate } = useRevalidator();
 
 	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -26,6 +27,9 @@ export function TaskComposer() {
 					formRef.current?.reset();
 					// wait enough for the disabled prop to be removed
 					setTimeout(() => inputRef.current?.focus(), 100);
+
+					// notify status bar
+					revalidate();
 				},
 			},
 		);

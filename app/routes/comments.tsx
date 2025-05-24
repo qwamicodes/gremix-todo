@@ -29,6 +29,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 	});
 
 	for (const comment of comments) {
+		if (comment.deletedAt) {
+			comment.content = "deleted";
+		}
+
 		comment.content = await render(comment.content);
 	}
 
@@ -47,6 +51,14 @@ export async function action({ request }: ActionFunctionArgs) {
 			},
 			data: {
 				deletedAt: new Date(),
+			},
+			include: {
+				author: {
+					select: {
+						id: true,
+						username: true,
+					},
+				},
 			},
 		});
 
