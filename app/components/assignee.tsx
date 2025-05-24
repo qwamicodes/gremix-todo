@@ -1,45 +1,32 @@
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { AssigneeMenu } from "./menus/assignee-menu";
 import type { Task } from "~/lib/types";
-import React from "react";
-import { useTasks } from "~/lib/use-tasks";
+import { useTaskUpdate } from "~/lib/use-task-update";
+import clsx from "clsx";
 
 interface AssigneeProps {
 	task: Task;
 }
 
 function Assignee({ task }: AssigneeProps) {
-	const [isOpen, setisOpen] = React.useState(false);
-
-	const { update } = useTasks();
-
-	const handleUpdate = (taskId: number, updates: Partial<Task>) => {
-		update.mutate(
-			{ taskId, updates },
-			{
-				onSuccess: () => {
-					setisOpen(false);
-				},
-			},
-		);
-	};
+	const update = useTaskUpdate(task);
 
 	return (
-		<Popover open={isOpen} onOpenChange={setisOpen} placement="bottom-end">
+		<Popover placement="bottom-end">
 			<PopoverTrigger asChild>
 				<button
 					data-assignee-button
 					type="button"
-					className="flex items-center gap-1 bg-transparent text-sm font-mono text-secondary"
+					className={clsx(
+						"flex items-center gap-1 bg-transparent text-sm font-mono text-secondary",
+					)}
 					onClick={(e) => {
 						e.stopPropagation();
-						setisOpen(!isOpen);
 					}}
 					onKeyDown={(e) => {
 						e.stopPropagation();
 						if (e.key === "Enter" || e.key === " ") {
 							e.preventDefault();
-							setisOpen(!isOpen);
 						}
 					}}
 				>
@@ -54,10 +41,8 @@ function Assignee({ task }: AssigneeProps) {
 
 			<PopoverContent className="z-50 popover-content">
 				<AssigneeMenu
-					assignee={task.assignee}
-					onTeamMemberSelect={(newAssignee) =>
-						handleUpdate(task.id, { assignee: newAssignee })
-					}
+					task={task}
+					onAssigneeUpdate={(assignee) => update.mutate({ assignee })}
 				/>
 			</PopoverContent>
 		</Popover>

@@ -7,7 +7,7 @@ export function Todos() {
 	const { query } = useTasks();
 	const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = query;
 
-	const tasks = data?.pages.flat()
+	const tasks = data?.pages.flat();
 
 	return (
 		<div className="overflow-y-auto h-full">
