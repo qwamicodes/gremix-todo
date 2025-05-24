@@ -1,6 +1,8 @@
+import { useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
 import type { Task } from "~/lib/types";
 import { useTaskUpdate } from "~/lib/use-task-update";
+import type { loader } from "~/routes/_index";
 import { AssigneeMenu } from "./assignee-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
@@ -9,6 +11,7 @@ interface AssigneeProps {
 }
 
 function Assignee({ task }: AssigneeProps) {
+	const { user } = useLoaderData<typeof loader>();
 	const update = useTaskUpdate(task);
 
 	return (
@@ -18,6 +21,7 @@ function Assignee({ task }: AssigneeProps) {
 					data-assignee-button
 					className={clsx(
 						"flex items-center gap-1 text-sm font-mono text-secondary bg-stone-200/50 hover:bg-stone-200 dark:bg-neutral-800/50 dark:hover:bg-neutral-800 px-1 py-0.5 rounded-full",
+						{ "!bg-orange-500/5 !text-orange-500": task.assignee.id === user.id },
 					)}
 				>
 					<img

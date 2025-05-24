@@ -17,7 +17,7 @@ export function Todos() {
 				</li>
 
 				{tasks?.map((task) => (
-					<li key={task.id}>
+					<li key={task.id} id={task.id.toString()}>
 						<TodoItem task={task} />
 					</li>
 				))}
