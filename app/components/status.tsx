@@ -21,9 +21,12 @@ function Status({ task }: StatusProps) {
 
 	return (
 		<Popover placement="bottom-start">
-			<PopoverTrigger className="bg-transparent">
-				<div
-					data-status-button
+			<PopoverTrigger
+				onClick={(e) => e.stopPropagation()}
+				className="bg-transparent"
+			>
+				<button
+					type="button"
 					className={clsx(
 						"rounded-full bg-transparent flex items-center justify-center",
 					)}
@@ -33,9 +36,12 @@ function Status({ task }: StatusProps) {
 							"i-svg-spinners-270-ring": update.status === "pending",
 						})}
 					/>
-				</div>
+				</button>
 			</PopoverTrigger>
-			<PopoverContent className="z-50 popover-content animate-fade-in animate-duration-200">
+			<PopoverContent
+				onClick={(e) => e.stopPropagation()}
+				className="z-50 animate-fade-in animate-duration-200"
+			>
 				<StatusMenu
 					task={task}
 					onStatusUpdate={(status) => update.mutate({ status })}

@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { Button } from "./button";
+import { useMounted } from "~/lib/use-mounted";
 
 interface Props {
 	onClick: VoidFunction;
@@ -8,6 +9,12 @@ interface Props {
 }
 
 export function LoadingButton({ onClick, isLoading, done }: Props) {
+	const mounted = useMounted();
+
+	if (!mounted) {
+		return null;
+	}
+
 	return (
 		<Button
 			className="bg-zinc-200 light:text-zinc-500 dark:bg-neutral-100 dark:bg-neutral-800"

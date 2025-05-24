@@ -1,12 +1,16 @@
 import clsx from "clsx";
 import { useAtom } from "jotai";
-import React from "react";
+import React, { useRef } from "react";
 import { age } from "~/lib/dates";
 import { hoveredTask } from "~/lib/store";
 import type { Task } from "~/lib/types";
 import { Assignee } from "./assignee";
 import { Status } from "./status";
 import { TaskComments } from "./task-comments";
+import { useTaskUpdate } from "~/lib/use-task-update";
+import { useDoubleClick } from "~/lib/use-double-click";
+import { EditTaskInput } from "./edit-task-input";
+import { TaskTitle } from "./task-title";
 
 interface Props {
 	task: Task;
@@ -14,29 +18,38 @@ interface Props {
 
 export function TodoItem({ task }: Props) {
 	const [opened, setOpened] = React.useState(false);
+	const [isEditing, setIsEditing] = React.useState(false);
+	const [draft, setDraft] = React.useState(task.title);
 
 	const [, setHoveredTask] = useAtom(hoveredTask);
+	const update = useTaskUpdate(task);
 
-	const handleToggleOpen = (e: React.MouseEvent | React.KeyboardEvent) => {
+	const handleToggleOpen = () => {
 		if (
-			e.target instanceof HTMLElement &&
-			(e.target.closest("[data-assignee-button]") ||
-				e.target.closest("[data-status-button]") ||
-				e.target.closest(".popover-content"))
+			document.activeElement instanceof HTMLElement &&
+			document.activeElement.closest("[data-edit-task-input]")
 		) {
 			return;
 		}
 		setOpened(!opened);
 	};
 
+	const handleEdit = () => {
+		setIsEditing(true);
+	};
+
+	const handleClick = useDoubleClick(handleToggleOpen, handleEdit);
+
 	return (
 		<div>
 			<div
 				className="flex items-center gap-4 p-2 hover:bg-stone-200/50 dark:hover:bg-neutral-800/50 focus:bg-stone-200/50 dark:focus:bg-neutral-800 cursor-pointer"
-				onClick={handleToggleOpen}
+				onClick={handleClick}
 				onKeyDown={(e) => {
 					if (e.key === "Enter") {
-						handleToggleOpen(e);
+						handleToggleOpen();
+					} else if (e.key === "e" && !isEditing) {
+						handleEdit();
 					}
 				}}
 				onMouseEnter={() => {
@@ -46,18 +59,30 @@ export function TodoItem({ task }: Props) {
 				// biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation>
 				tabIndex={0}
 			>
-				<Status task={task} />
+				{isEditing ? (
+					<div className="i-lucide-pencil text-secondary" />
+				) : (
+					<Status task={task} />
+				)}
 
 				<div className="flex-1">
 					<div className="flex items-center justify-between">
-						<div
-							className={clsx("font-medium", {
-								"line-through font-normal text-secondary":
-									task.status === "done",
-							})}
-						>
-							{task.title}
-						</div>
+						{isEditing ? (
+							<EditTaskInput
+								value={draft}
+								onChange={setDraft}
+								onConfirm={() => {
+									update.mutate({ title: draft });
+									setIsEditing(false);
+								}}
+								onCancel={() => {
+									setDraft(task.title);
+									setIsEditing(false);
+								}}
+							/>
+						) : (
+							<TaskTitle task={task} />
+						)}
 					</div>
 				</div>
 

@@ -72,3 +72,15 @@ code {
 .comment-article ul {
   @apply list-disc list-inside;
 }
+
+.comment-article pre {
+    max-width: 320px;
+
+  @apply overflow-x-auto rounded-xl bg-neutral-100 dark:bg-neutral-800 p-3 text-sm max-w-7xl max-h-3xl;
+
+}
+
+.comment-article code {
+  @apply whitespace-pre;
+  font-family: 'DM Mono', monospace;
+}

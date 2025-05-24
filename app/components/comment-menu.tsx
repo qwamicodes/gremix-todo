@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import React from "react";
 import {
 	Popover,
@@ -9,70 +8,90 @@ import {
 
 interface Props {
 	onDelete: () => void;
+	onEdit: () => void;
 }
 
-export function CommentMenu({ onDelete }: Props) {
+export function CommentMenu({ onDelete, onEdit }: Props) {
 	return (
 		<Popover placement="bottom-end">
 			<PopoverTrigger asChild>
 				<button
 					type="button"
-					className="flex items-center justify-center size-8 me-2 dark:bg-neutral-800/50 dark:hover:bg-neutral-800 bg-stone-200/20 hover:bg-stone-200/60 rounded-full text-secondary"
+					className="flex items-center justify-center size-8 me-2 dark:bg-neutral-800/50 dark:hover:bg-neutral-800 hover:bg-stone-200 rounded-full text-secondary"
 				>
 					<div className="i-solar-menu-dots-bold" />
 				</button>
 			</PopoverTrigger>
 
 			<PopoverContent className="z-50 popover-content p-0">
-				<Menu onDelete={onDelete} />
+				<Menu onDelete={onDelete} onEdit={onEdit} />
 			</PopoverContent>
 		</Popover>
 	);
 }
 
-function Menu({ onDelete }: Props) {
+function Menu({ onDelete, onEdit }: Props) {
 	const [confirmingDelete, setConfirmingDelete] = React.useState(false);
 	const popover = usePopoverContext();
 
 	function handleDeleteClick(e: React.MouseEvent) {
 		e.stopPropagation();
-		onDelete();
-		popover.setOpen(false);
+		setConfirmingDelete(true);
+	}
+
+	function cancelDelete(e: React.MouseEvent) {
+		e.stopPropagation();
+		setConfirmingDelete(false);
 	}
 
 	return (
-		<div
-			className={clsx(
-				"bg-neutral-100 text-sm font-mono dark:bg-neutral-900 rounded-lg border dark:border-neutral-800 overflow-hidden shadow-lg transition-all duration-300",
-				confirmingDelete ? "w-12.5rem" : "w-10rem",
-			)}
-		>
-			{confirmingDelete ? (
-				<div className="flex items-center gap-3 px-3 py-2">
-					<span className="whitespace-nowrap text-secondary">
-						Are you sure?
-					</span>
+		<div className="bg-neutral-100 text-sm font-mono dark:bg-neutral-900 rounded-lg w-12.5rem border dark:border-neutral-800 overflow-hidden shadow-lg mt-1.5">
+			<ul className="space-y-1 p-1">
+				<li>
 					<button
 						type="button"
-						className="i-lucide-check w-5 h-5 text-red-500 animate-fade-in animate-duration-200 "
-						onClick={handleDeleteClick}
-					/>
-					<button
-						type="button"
-						className="i-lucide-x w-5 h-5 text-secondary animate-fade-in animate-duration-200 animate-delay-50"
-						onClick={() => setConfirmingDelete(false)}
-					/>
-				</div>
-			) : (
-				<button
-					type="button"
-					className="w-full text-red-500 rounded-lg hover:bg-red-600/5 dark:hover:bg-red-800/10 flex gap-2 items-center bg-transparent py-2 px-3  transition-all duration-300"
-					onClick={() => setConfirmingDelete(true)}
-				>
-					<div className="i-solar-trash-bin-trash-bold" />
-					Delete
-				</button>
-			)}
+						className="w-full rounded-lg flex gap-2 items-center bg-transparent py-2 px-3 hover:bg-neutral-200/80 dark:hover:bg-neutral-800/20 text-secondary"
+						onClick={() => {
+							popover.setOpen(false);
+							onEdit();
+						}}
+					>
+						<div className="i-lucide-pencil" />
+						Edit
+					</button>
+				</li>
+				<li>
+					{confirmingDelete ? (
+						<div className="flex justify-between items-center px-3 py-2 text-red-500 rounded-lg bg-red-100 dark:bg-red-800/10">
+							<span className="flex items-center gap-2">
+								<div className="i-solar-trash-bin-trash-linear" />
+								Delete?
+							</span>
+							<div className="flex gap-2">
+								<button
+									type="button"
+									className="i-lucide-check w-5 h-5 text-red-500 animate-fade-in"
+									onClick={onDelete}
+								/>
+								<button
+									type="button"
+									className="i-lucide-x w-5 h-5 text-secondary animate-fade-in"
+									onClick={cancelDelete}
+								/>
+							</div>
+						</div>
+					) : (
+						<button
+							type="button"
+							className="w-full text-red-500 rounded-lg flex gap-2 items-center bg-transparent py-2 px-3 hover:bg-red-100 dark:hover:bg-red-800/10"
+							onClick={handleDeleteClick}
+						>
+							<div className="i-solar-trash-bin-trash-linear" />
+							Delete
+						</button>
+					)}
+				</li>
+			</ul>
 		</div>
 	);
 }

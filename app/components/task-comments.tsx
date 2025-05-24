@@ -1,6 +1,7 @@
 import { useComments } from "~/lib/use-comments";
 import { CommentComposer } from "./comment-composer";
 import { TaskComment } from "./task-comment";
+import { useCommentDelete } from "~/lib/use-comment-delete";
 
 interface Props {
 	opened: boolean;
@@ -8,7 +9,8 @@ interface Props {
 }
 
 export function TaskComments({ opened, taskId }: Props) {
-	const { data: comments = [], remove } = useComments(taskId, opened);
+	const { data: comments = [] } = useComments(taskId, opened);
+	const remove = useCommentDelete(taskId);
 
 	if (!opened) return null;
 
@@ -17,6 +19,7 @@ export function TaskComments({ opened, taskId }: Props) {
 			{comments.map((comment) => (
 				<TaskComment
 					key={comment.id}
+					taskId={taskId}
 					comment={comment}
 					onDelete={() => remove.mutate(comment.id)}
 				/>

@@ -33,7 +33,11 @@ const statuses: StatusProps[] = [
 	},
 ];
 
-export function StatusMenu({ task, onDelete, onStatusUpdate }: StatusMenuProps) {
+export function StatusMenu({
+	task,
+	onDelete,
+	onStatusUpdate,
+}: StatusMenuProps) {
 	const [confirmingDelete, setConfirmingDelete] = React.useState(false);
 
 	const popover = usePopoverContext();
@@ -47,7 +51,6 @@ export function StatusMenu({ task, onDelete, onStatusUpdate }: StatusMenuProps) 
 		e.stopPropagation();
 		setConfirmingDelete(true);
 	}
-
 
 	function cancelDelete(e: React.MouseEvent) {
 		e.stopPropagation();
