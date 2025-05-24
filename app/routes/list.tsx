@@ -1,7 +1,8 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { checkAuth } from "~/lib/check-auth";
 import { cleanUpdate } from "~/lib/clean-update";
 import { prisma } from "~/lib/prisma.server";
-import { badRequest } from "~/lib/responses";
+import { badRequest, notFound } from "~/lib/responses";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const url = new URL(request.url);
@@ -27,15 +28,15 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 			assignee: {
 				select: {
 					username: true,
-					id: true
-				}
+					id: true,
+				},
 			},
 			author: {
 				select: {
 					username: true,
-					id: true
-				}
-			}
+					id: true,
+				},
+			},
 		},
 		take: 100,
 		skip: page * 100,
@@ -51,6 +52,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
+	const user = await checkAuth(request);
 	if (request.method === "DELETE") {
 		const { taskId: id } = await request.json();
 
@@ -66,10 +68,37 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 	if (request.method === "PATCH") {
 		const { id, updates } = cleanUpdate(await request.json());
 
+		let previousAssigneeId = 0;
+		if (updates.assigneeId) {
+			const previous = await prisma.task.findUnique({
+				where: { id },
+				select: { assigneeId: true },
+			});
+
+			if (!previous) throw notFound();
+
+			previousAssigneeId = previous?.assigneeId;
+		}
+
 		const task = await prisma.task.update({
 			where: { id },
 			data: updates,
 		});
+
+		if (previousAssigneeId !== updates.assigneeId) {
+			await prisma.notification.create({
+				data: {
+					message: `You have been assigned to task @[task/${id}] by @[user/${user.id}]`,
+					userId: task.assigneeId,
+					type: "assignment",
+					meta: {
+						taskId: id,
+						previousAssigneeId,
+						newAssigneeId: updates.assigneeId,
+					},
+				},
+			});
+		}
 
 		return { task };
 	}
