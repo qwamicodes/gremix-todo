@@ -1,11 +1,14 @@
+import { useLoaderData } from "@remix-run/react";
 import React from "react";
 import { useComments } from "~/lib/use-comments";
+import type { loader } from "~/routes/_index";
 
 interface Props {
 	taskId: number;
 }
 
 export function CommentComposer({ taskId }: Props) {
+	const { user } = useLoaderData<typeof loader>();
 	const { create } = useComments(taskId);
 	const inputRef = React.useRef<HTMLTextAreaElement>(null);
 
@@ -17,7 +20,7 @@ export function CommentComposer({ taskId }: Props) {
 
 		if (!content.trim()) return;
 
-		create.mutate({ taskId, content: content.trim(), author: "notgr" });
+		create.mutate({ taskId, content: content.trim(), authorId: user.id });
 		form.reset();
 		inputRef.current?.focus();
 	};

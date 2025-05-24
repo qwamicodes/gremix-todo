@@ -20,7 +20,7 @@ function TaskComment({ comment, onDelete }: TaskCommentProps) {
 						})}
 					>
 						<header className="text-sm font-mono text-secondary">
-							@{comment.author} &bull; {authorTime(comment.createdAt)}
+							@{comment.author.username} &bull; {authorTime(comment.createdAt)}
 						</header>
 
 						{comment.deletedAt ? (

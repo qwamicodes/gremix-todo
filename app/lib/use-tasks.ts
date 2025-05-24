@@ -20,21 +20,8 @@ export function useTasks() {
 
 	const create = useMutation({
 		mutationFn: createTask,
-		onSuccess: (newTask) => {
-			type Old = { pageParams: number[]; pages: Task[][] };
-			queryClient.setQueryData(["tasks"], (old?: Old) => {
-				if (!old) return;
-
-				const [top, ...rest] = old.pages;
-
-				return {
-					pageParams: old.pageParams,
-					pages: [[newTask, ...top], ...rest],
-				};
-			});
-		},
-		onError: (err) => {
-			console.error(err);
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["tasks"] });
 		},
 	});
 

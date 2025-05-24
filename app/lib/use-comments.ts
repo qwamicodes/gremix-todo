@@ -23,19 +23,13 @@ export async function deleteComment(id: number): Promise<Comment> {
 	return data.comment;
 }
 
-export async function createComment({
-	taskId,
-	content,
-	author,
-}: {
-	taskId: number;
-	content: string;
-	author: string;
-}): Promise<Comment> {
+type CreatePayload = Pick<Comment, "taskId" | "content" | "authorId">;
+
+export async function createComment(payload: CreatePayload): Promise<Comment> {
 	const res = await fetch("/comments", {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({ taskId, content, author }),
+		body: JSON.stringify(payload),
 	});
 
 	if (!res.ok) throw new Error("Failed to create comment");
@@ -55,42 +49,15 @@ export function useComments(taskId: number, enabled = false) {
 
 	const create = useMutation({
 		mutationFn: createComment,
-		onSuccess: (newComment) => {
-			queryClient.setQueryData<Comment[]>(["comments", taskId], (old = []) => [
-				...old,
-				newComment,
-			]);
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["comments", taskId] });
 			queryClient.invalidateQueries({ queryKey: ["tasks"] });
 		},
 	});
 
 	const remove = useMutation({
 		mutationFn: deleteComment,
-		onMutate: async (commentId: number) => {
-			await queryClient.cancelQueries({ queryKey: ["comments", taskId] });
-
-			const previous = queryClient.getQueryData<Comment[]>([
-				"comments",
-				taskId,
-			]);
-
-			queryClient.setQueryData<Comment[]>(["comments", taskId], (old = []) =>
-				old.map((c) =>
-					c.id === commentId ? { ...c, deletedAt: new Date() } : c,
-				),
-			);
-
-			return { previous };
-		},
-		onError: (_err, _id, context) => {
-			if (context?.previous) {
-				queryClient.setQueryData(["comments", taskId], context.previous);
-			}
-		},
-		onSuccess: (updatedComment) => {
-			queryClient.setQueryData<Comment[]>(["comments", taskId], (old = []) =>
-				old.map((c) => (c.id === updatedComment.id ? updatedComment : c)),
-			);
+		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["comments", taskId] });
 			queryClient.invalidateQueries({ queryKey: ["tasks"] });
 		},

@@ -1,7 +1,11 @@
+import { useLoaderData } from "@remix-run/react";
 import React from "react";
 import { useTasks } from "~/lib/use-tasks";
+import type { loader } from "~/routes/_index";
 
 export function TaskComposer() {
+	const { user } = useLoaderData<typeof loader>();
+
 	const formRef = React.useRef<HTMLFormElement>(null);
 	const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -16,7 +20,7 @@ export function TaskComposer() {
 		if (!title.trim()) return;
 
 		create.mutate(
-			{ title: title.trim(), assignee: "notgr", author: "notgr" },
+			{ title: title.trim(), assigneeId: user.id, authorId: user.id },
 			{
 				onSuccess: () => {
 					formRef.current?.reset();

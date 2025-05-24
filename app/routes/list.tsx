@@ -24,6 +24,18 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 					Comment: true,
 				},
 			},
+			assignee: {
+				select: {
+					username: true,
+					id: true
+				}
+			},
+			author: {
+				select: {
+					username: true,
+					id: true
+				}
+			}
 		},
 		take: 100,
 		skip: page * 100,

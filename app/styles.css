@@ -68,3 +68,7 @@ code {
 .comment-article p + p {
   @apply mt-2;
 }
+
+.comment-article ul {
+  @apply list-disc list-inside;
+}

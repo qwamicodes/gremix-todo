@@ -1,10 +1,25 @@
-import type { MetaFunction } from "@remix-run/node";
+import {
+	type LoaderFunctionArgs,
+	type MetaFunction,
+	redirect,
+} from "@remix-run/node";
 import { Header } from "~/components/header";
 import { StatusBar } from "~/components/status-bar";
 import { Todos } from "~/components/todos";
+import { checkAuth } from "~/lib/check-auth";
 import { prisma } from "~/lib/prisma.server";
 
-export const loader = async () => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+	let user: Awaited<ReturnType<typeof checkAuth>>;
+
+	try {
+		user = await checkAuth(request);
+	} catch (error) {
+		return redirect("/login");
+	}
+
+	const users = await prisma.user.findMany({ omit: { password: true } });
+
 	const [{ total, done }] = (await prisma.$queryRaw`
 		SELECT
 			COUNT(*) as total,
@@ -12,7 +27,7 @@ export const loader = async () => {
 		FROM "Task"
 	`) satisfies { total: bigint; done: bigint }[];
 
-	return { done: Number(done), total: Number(total) };
+	return { done: Number(done), total: Number(total), user, users };
 };
 
 export const meta: MetaFunction = () => {

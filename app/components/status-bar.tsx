@@ -22,7 +22,7 @@ export function StatusBar() {
 			<div>
 				{task && (
 					<span>
-						#{task.id} Created by @{task.author} &bull;{" "}
+						#{task.id} Created by @{task.author.username} &bull;{" "}
 						{authorTime(task.createdAt)}
 					</span>
 				)}

@@ -21,7 +21,7 @@ function Status({ task }: StatusProps) {
 
 	return (
 		<Popover placement="bottom-start">
-			<PopoverTrigger>
+			<PopoverTrigger className="bg-transparent">
 				<div
 					data-status-button
 					className={clsx(

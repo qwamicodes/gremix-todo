@@ -18,6 +18,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
 		orderBy: {
 			createdAt: "asc",
 		},
+		include: {
+			author: {
+				select: {
+					id: true,
+					username: true,
+				},
+			},
+		},
 	});
 
 	for (const comment of comments) {
