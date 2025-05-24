@@ -6,7 +6,7 @@ import { authorTime } from "~/lib/dates";
 import { useNotifications } from "~/lib/use-notifications";
 import type { loader as indexLoader } from "~/routes/_index";
 import type { loader } from "~/routes/notifications";
-import { Popover, PopoverContent, PopoverTrigger, usePopover } from "./popover";
+import { Popover, PopoverContent, PopoverTrigger, usePopoverContext } from "./popover";
 
 export function NotificationsButton() {
 	const { unreadNotifications } = useLoaderData<typeof indexLoader>();
@@ -36,7 +36,7 @@ function NotificationsList() {
 	const { unreadNotifications } = useLoaderData<typeof indexLoader>();
 
 	return (
-		<div className="w-24rem border rounded-xl bg-stone-50 dark:(bg-neutral-900 border-neutral-800) max-h-30rem overflow-y-auto shadow-lg">
+		<div className="w-24rem border rounded-xl bg-stone-50 dark:(bg-neutral-900 border-neutral-800) max-h-24rem overflow-y-auto shadow-lg">
 			<header className="font-medium text-secondary text-sm p-2 pb-0">
 				Notifications ({unreadNotifications})
 			</header>
@@ -57,10 +57,13 @@ function NotificationsList() {
 type Notification = Awaited<ReturnType<typeof loader>>["notifications"][number];
 function NotificationItem({ notification }: { notification: Notification }) {
 	const { read } = useNotifications();
-	const popover = usePopover();
+	const popover = usePopoverContext();
 
 	function readNotification() {
-		read.mutate(notification.id);
+		if (!notification.read) {
+			read.mutate(notification.id);
+		}
+
 		popover.setOpen(false);
 	}
 

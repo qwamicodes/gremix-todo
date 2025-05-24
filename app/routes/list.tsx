@@ -86,6 +86,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		});
 
 		if (
+			updates.assigneeId &&
 			previousAssigneeId !== updates.assigneeId &&
 			updates.assigneeId !== user.id // don't notify self
 		) {
