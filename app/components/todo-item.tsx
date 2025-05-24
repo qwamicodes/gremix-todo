@@ -1,12 +1,12 @@
 import clsx from "clsx";
-import React from "react";
-import type { Task } from "~/lib/types";
-import { age } from "~/lib/dates";
-import { TaskComments } from "./task-comments";
-import { Status } from "./status";
-import { Assignee } from "./assignee";
 import { useAtom } from "jotai";
+import React from "react";
+import { age } from "~/lib/dates";
 import { hoveredTask } from "~/lib/store";
+import type { Task } from "~/lib/types";
+import { Assignee } from "./assignee";
+import { Status } from "./status";
+import { TaskComments } from "./task-comments";
 
 interface Props {
 	task: Task;
@@ -32,7 +32,7 @@ export function TodoItem({ task }: Props) {
 	return (
 		<div>
 			<div
-				className="flex items-center gap-4 p-2 hover:bg-stone-200 dark:hover:bg-neutral-800 focus:bg-stone-200 dark:focus:bg-neutral-800 cursor-pointer"
+				className="flex items-center gap-4 p-2 hover:bg-stone-200/50 dark:hover:bg-neutral-800/50 focus:bg-stone-200/50 dark:focus:bg-neutral-800 cursor-pointer"
 				onClick={handleToggleOpen}
 				onKeyDown={(e) => {
 					if (e.key === "Enter") {

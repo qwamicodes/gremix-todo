@@ -5,7 +5,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 	usePopoverContext,
-} from "../popover";
+} from "./popover";
 
 interface Props {
 	onDelete: () => void;
@@ -17,7 +17,7 @@ export function CommentMenu({ onDelete }: Props) {
 			<PopoverTrigger asChild>
 				<button
 					type="button"
-					className="flex items-center justify-center size-8 me-2 dark:bg-neutral-800/50 dark:hover:bg-neutral-800 hover:bg-stone-200 rounded-full text-secondary"
+					className="flex items-center justify-center size-8 me-2 dark:bg-neutral-800/50 dark:hover:bg-neutral-800 bg-stone-200/20 hover:bg-stone-200/60 rounded-full text-secondary"
 				>
 					<div className="i-solar-menu-dots-bold" />
 				</button>

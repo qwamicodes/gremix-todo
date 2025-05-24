@@ -1,8 +1,8 @@
-import { Popover, PopoverContent, PopoverTrigger } from "./popover";
-import { AssigneeMenu } from "./menus/assignee-menu";
+import clsx from "clsx";
 import type { Task } from "~/lib/types";
 import { useTaskUpdate } from "~/lib/use-task-update";
-import clsx from "clsx";
+import { AssigneeMenu } from "./assignee-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
 interface AssigneeProps {
 	task: Task;
@@ -18,7 +18,7 @@ function Assignee({ task }: AssigneeProps) {
 					data-assignee-button
 					type="button"
 					className={clsx(
-						"flex items-center gap-1 bg-transparent text-sm font-mono text-secondary",
+						"flex items-center gap-1 bg-transparent text-sm font-mono text-secondary hover:bg-stone-200 dark:hover:bg-neutral-800 px-1 py-0.5 rounded-full",
 					)}
 					onClick={(e) => {
 						e.stopPropagation();
@@ -39,7 +39,7 @@ function Assignee({ task }: AssigneeProps) {
 				</button>
 			</PopoverTrigger>
 
-			<PopoverContent className="z-50 popover-content">
+			<PopoverContent className="z-50 popover-content animate-fade-in animate-duration-200">
 				<AssigneeMenu
 					task={task}
 					onAssigneeUpdate={(assignee) => update.mutate({ assignee })}

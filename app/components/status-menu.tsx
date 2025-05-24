@@ -1,7 +1,7 @@
 import type { Status, Task } from "@prisma/client";
 import clsx from "clsx";
 import React from "react";
-import { usePopoverContext } from "../popover";
+import { usePopoverContext } from "./popover";
 
 interface StatusMenuProps {
 	task: Task;

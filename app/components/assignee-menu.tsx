@@ -1,5 +1,5 @@
 import type { Task } from "@prisma/client";
-import { usePopoverContext } from "../popover";
+import { usePopoverContext } from "./popover";
 
 interface AssigneeMenuProps {
 	task: Task;
@@ -48,9 +48,7 @@ function AssigneeMenu({ task, onAssigneeUpdate }: AssigneeMenuProps) {
 				</div>
 			</div>
 
-			<div className="font-medium ms-3 px-1.5 text-secondary">
-				Team members
-			</div>
+			<div className="font-medium ms-3 px-1 text-secondary">Team members</div>
 
 			<ul className="space-y-1 p-1">
 				{team

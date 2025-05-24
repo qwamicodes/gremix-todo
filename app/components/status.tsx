@@ -2,8 +2,8 @@ import clsx from "clsx";
 import type { Task } from "~/lib/types";
 import { useTaskDelete } from "~/lib/use-task-delete";
 import { useTaskUpdate } from "~/lib/use-task-update";
-import { StatusMenu } from "./menus/status-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
+import { StatusMenu } from "./status-menu";
 
 interface StatusProps {
 	task: Task;
@@ -36,7 +36,7 @@ function Status({ task }: StatusProps) {
 					/>
 				</button>
 			</PopoverTrigger>
-			<PopoverContent className="z-50 popover-content">
+			<PopoverContent className="z-50 popover-content animate-fade-in animate-duration-200">
 				<StatusMenu
 					task={task}
 					onStatusUpdate={(status) => update.mutate({ status })}

@@ -1,5 +1,6 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { prisma } from "~/lib/prisma.server";
+import { render } from "~/lib/render.server";
 import { badRequest } from "~/lib/responses";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -19,6 +20,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 		},
 	});
 
+	for (const comment of comments) {
+		comment.content = await render(comment.content);
+	}
+
 	return { comments };
 }
 
@@ -37,12 +42,16 @@ export async function action({ request }: ActionFunctionArgs) {
 			},
 		});
 
+		comment.content = await render(comment.content);
+
 		return { comment };
 	}
 
 	const data = await request.json();
 
 	const comment = await prisma.comment.create({ data });
+
+	comment.content = await render(comment.content);
 
 	return { comment };
 }

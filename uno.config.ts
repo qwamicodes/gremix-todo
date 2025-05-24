@@ -13,4 +13,16 @@ export default defineConfig({
 	},
 	presets: [presetWind3({ dark: "media" }), presetIcons(), presetForms()],
 	transformers: [transformerDirectives(), transformerVariantGroup()],
+	safelist: [
+		"no-underline",
+		"inline-flex",
+		"items-center",
+		"gap-1",
+		"font-medium",
+		"!text-blue-600",
+		"dark:text-blue-500",
+		"bg-blue-700 bg-opacity-10",
+		"rounded-lg",
+		"px-1",
+	],
 });
