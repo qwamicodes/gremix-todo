@@ -68,8 +68,8 @@ async function expandNotifications(notifications: Notification[]) {
 
 		return {
 			...it,
-			tasks: taskIds.map((id) => tasks.find((t) => t.id === id)!),
-			users: userIds.map((id) => users.find((u) => u.id === id)!),
+			tasks: taskIds.map((id) => tasks.find((t) => t.id === id)),
+			users: userIds.map((id) => users.find((u) => u.id === id)),
 		};
 	});
 }

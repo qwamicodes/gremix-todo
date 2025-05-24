@@ -6,7 +6,12 @@ import { authorTime } from "~/lib/dates";
 import { useNotifications } from "~/lib/use-notifications";
 import type { loader as indexLoader } from "~/routes/_index";
 import type { loader } from "~/routes/notifications";
-import { Popover, PopoverContent, PopoverTrigger, usePopoverContext } from "./popover";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+	usePopoverContext,
+} from "./popover";
 
 export function NotificationsButton() {
 	const { unreadNotifications } = useLoaderData<typeof indexLoader>();
@@ -16,7 +21,7 @@ export function NotificationsButton() {
 			<PopoverTrigger className="bg-transparent">
 				<div
 					className={clsx(
-						"bg-stone-200 flex items-center justify-center rounded-full px-2 font-mono flex items-center gap-2 text-secondary",
+						"bg-stone-200 dark:bg-neutral-800 flex items-center justify-center rounded-full px-2 font-mono flex items-center gap-2 text-secondary",
 						{ "!bg-orange-500 !text-white": unreadNotifications },
 					)}
 				>
@@ -96,12 +101,13 @@ function convert(notification: Notification) {
 
 	return message
 		.replace(TASK_MENTION_REGEX, (_, taskId) => {
-			const task = tasks.find((it) => it.id === Number(taskId))!;
-			return `<span href="/tasks/${taskId}" class="text-blue-500 font-medium">#${taskId}: ${shorten(task.title)}</span>`;
+			const task = tasks.find((it) => it?.id === Number(taskId));
+			const color = task ? "text-blue-500" : "text-secondary";
+			return `<span href="/tasks/${taskId}" class="${color} font-medium">#${taskId}: ${shorten(task?.title || "&lt;deleted task&gt;")}…</span>`;
 		})
 		.replace(USER_MENTION_REGEX, (_, userId) => {
-			const user = users.find((it) => it.id === Number(userId))!;
-			return `<span class="text-orange-500 font-medium font-mono">@${user.username}</span>`;
+			const user = users.find((it) => it?.id === Number(userId))!;
+			return `<span class="text-orange-500 font-medium font-mono">@${user?.username || "&lt;deleted user&gt;"}</span>`;
 		});
 }
 
