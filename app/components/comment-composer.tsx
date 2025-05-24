@@ -1,3 +1,4 @@
+import React from "react";
 import { useComments } from "~/lib/use-comments";
 
 interface Props {
@@ -6,6 +7,7 @@ interface Props {
 
 export function CommentComposer({ taskId }: Props) {
 	const { create } = useComments(taskId);
+	const inputRef = React.useRef<HTMLTextAreaElement>(null);
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -17,6 +19,7 @@ export function CommentComposer({ taskId }: Props) {
 
 		create.mutate({ taskId, content: content.trim(), author: "notgr" });
 		form.reset();
+		inputRef.current?.focus();
 	};
 
 	return (
@@ -34,6 +37,7 @@ export function CommentComposer({ taskId }: Props) {
 				placeholder="Add a comment"
 				name="content"
 				rows={3}
+				ref={inputRef}
 			/>
 
 			<div className="text-sm text-secondary flex justify-between gap-4">
@@ -44,7 +48,7 @@ export function CommentComposer({ taskId }: Props) {
 
 				<button
 					type="submit"
-					className="flex gap-2 items-center bg-stone-300/60 px-2 rounded-full"
+					className="flex gap-2 items-center bg-stone-300/60 dark:bg-neutral-700 px-2 rounded-full"
 				>
 					<div className="i-solar-command-linear" /> + Enter to send
 				</button>

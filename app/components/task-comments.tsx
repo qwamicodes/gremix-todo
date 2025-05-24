@@ -8,7 +8,7 @@ interface Props {
 }
 
 export function TaskComments({ opened, taskId }: Props) {
-	const { data: comments = [], remove } = useComments(taskId);
+	const { data: comments = [], remove } = useComments(taskId, opened);
 
 	if (!opened) return null;
 
