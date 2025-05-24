@@ -45,13 +45,13 @@ function EditCommentInput({
 			<button
 				type="button"
 				onClick={onConfirm}
-				className="i-lucide-check text-green-600 dark:text-green-400 w-5 h-5"
+				className="i-lucide-check text-secondary w-5 h-5"
 				aria-label="Confirm"
 			/>
 			<button
 				type="button"
 				onClick={onCancel}
-				className="i-lucide-x text-red-600 dark:text-red-400 w-5 h-5"
+				className="i-lucide-x text-secondary w-5 h-5"
 				aria-label="Cancel"
 			/>
 		</div>

@@ -1,8 +1,8 @@
 import type { Status, Task } from "@prisma/client";
 import clsx from "clsx";
 import React from "react";
-import { usePopoverContext } from "./popover";
 import { useTaskDelete } from "~/lib/use-task-delete";
+import { usePopoverContext } from "./popover";
 
 interface StatusMenuProps {
 	task: Task;
@@ -52,7 +52,7 @@ export function StatusMenu({ task, onStatusUpdate }: StatusMenuProps) {
 
 			<hr className="dark:border-neutral-800" />
 
-			<ul className="space-y-1 p-1">
+			<ul className="p-1">
 				{statuses.map((s) => (
 					<li
 						key={s.id}

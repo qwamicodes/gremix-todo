@@ -40,16 +40,17 @@ export function EditTaskInput({
 				value={value}
 				onChange={(e) => onChange(e.target.value)}
 				onKeyDown={handleKeyDown}
-				className="px-2 py-1 border text-sm"
+				className="px-2 py-1 border"
 			/>
+
 			<div className="flex gap-2 items-center">
 				<button
 					type="button"
 					onClick={(e) => {
-							e.stopPropagation();
+						e.stopPropagation();
 						onConfirm();
 					}}
-					className="i-lucide-check text-green-600 dark:text-green-400 w-5 h-5"
+					className="i-lucide-check text-secondary w-5 h-5"
 					aria-label="Confirm"
 				/>
 				<button
@@ -58,7 +59,7 @@ export function EditTaskInput({
 						e.stopPropagation();
 						onCancel();
 					}}
-					className="i-lucide-x text-red-600 dark:text-red-400 w-5 h-5"
+					className="i-lucide-x text-secondary w-5 h-5"
 					aria-label="Cancel"
 				/>
 			</div>
