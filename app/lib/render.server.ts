@@ -21,7 +21,7 @@ const processor = unified()
 	.use(rehypeKatex)
 	.use(removeCodeTrail)
 	.use(rehypeShiki, {
-		themes: { light: "one-light", dark: "ayu-dark" },
+		themes: { light: "snazzy-light", dark: "ayu-dark" },
 	})
 	.use(smartypants)
 	.use(rehypeStringify);

@@ -17,6 +17,10 @@
   font-family: 'DM Mono', monospace;
 }
 
+input::placeholder, textarea::placeholder {
+  @apply text-stone-500/90 dark:text-neutral-500/90;
+}
+
 code {
   font-family: 'DM Mono', monospace;
 }
