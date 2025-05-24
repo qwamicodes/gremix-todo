@@ -1,54 +1,53 @@
-import React from "react";
-import type { Status } from "@prisma/client";
+import type { Status, Task } from "@prisma/client";
 import clsx from "clsx";
+import React from "react";
+import { usePopoverContext } from "../popover";
 
 interface StatusMenuProps {
-	status: string;
-	onStatusSelect: (status: Status) => void;
+	task: Task;
+	onStatusUpdate: (status: Status) => void;
 	onDelete: () => void;
 }
 
 interface StatusProps {
-	name: Status;
+	id: Status;
 	label: string;
 	icon: string;
 }
 
 const statuses: StatusProps[] = [
 	{
-		name: "pending",
+		id: "pending",
 		label: "Pending",
 		icon: "i-lucide-circle text-secondary",
 	},
 	{
-		name: "inProgress",
+		id: "inProgress",
 		label: "In Progress",
 		icon: "i-lucide-loader-circle text-amber-500",
 	},
 	{
-		name: "done",
+		id: "done",
 		label: "Done",
 		icon: "i-solar-check-circle-bold text-indigo-500",
 	},
 ];
 
-export function StatusMenu({
-	onStatusSelect,
-	status,
-	onDelete,
-}: StatusMenuProps) {
+export function StatusMenu({ task, onDelete, onStatusUpdate }: StatusMenuProps) {
 	const [confirmingDelete, setConfirmingDelete] = React.useState(false);
+
+	const popover = usePopoverContext();
+
+	function handleUpdate(status: Status) {
+		popover.setOpen(false);
+		onStatusUpdate(status);
+	}
 
 	function handleDeleteClick(e: React.MouseEvent) {
 		e.stopPropagation();
-
-		if (confirmingDelete) {
-			onDelete();
-			return;
-		}
-
 		setConfirmingDelete(true);
 	}
+
 
 	function cancelDelete(e: React.MouseEvent) {
 		e.stopPropagation();
@@ -58,9 +57,7 @@ export function StatusMenu({
 	return (
 		<div className="bg-neutral-100 text-sm dark:bg-neutral-900 rounded-lg w-12.5rem border dark:border-neutral-800 overflow-hidden shadow-lg mt-1.5">
 			<header className="px-2 py-2.5 flex items-center justify-start">
-				<div className="font-semibold ms-2 text-secondary">
-					Change status...
-				</div>
+				<div className="font-medium ms-2 text-secondary">Change status...</div>
 			</header>
 
 			<hr className="dark:border-neutral-800" />
@@ -68,11 +65,12 @@ export function StatusMenu({
 			<ul className="space-y-1 p-1">
 				{statuses.map((s) => (
 					<li
-						key={s.name}
+						key={s.id}
 						className={clsx(
 							"flex items-center pl-3 rounded-lg  hover:bg-neutral-200/80 dark:hover:bg-neutral-800/20",
 							{
-								"bg-neutral-200/80 dark:bg-neutral-800/20": s.name === status,
+								"bg-neutral-200/80 dark:bg-neutral-800/20":
+									s.id === task.status,
 							},
 						)}
 					>
@@ -83,17 +81,19 @@ export function StatusMenu({
 							className="w-full flex items-center justify-between py-2 px-3 bg-transparent font-mono"
 							onClick={(e) => {
 								e.stopPropagation();
-								onStatusSelect(s.name);
+								handleUpdate(s.id);
 							}}
 						>
 							<span>{s.label}</span>
-							{s.name === status && <div className="i-lucide-check size-5" />}
+							{s.id === task.status && (
+								<div className="i-lucide-check text-secondary" />
+							)}
 						</button>
 					</li>
 				))}
 			</ul>
 
-			<div className="font-semibold ms-3 px-1.5 text-secondary">Actions</div>
+			<div className="font-medium ms-3 px-1.5 text-secondary">Actions</div>
 
 			<ul className="space-y-1 p-1">
 				<li className="font-mono">
@@ -107,7 +107,7 @@ export function StatusMenu({
 								<button
 									type="button"
 									className="i-lucide-check w-5 h-5 text-red-500 animate-fade-in"
-									onClick={handleDeleteClick}
+									onClick={onDelete}
 								/>
 								<button
 									type="button"
@@ -122,7 +122,7 @@ export function StatusMenu({
 							className="w-full text-red-500 rounded-lg flex gap-2 items-center bg-transparent py-2 px-3 hover:bg-red-100 dark:hover:bg-red-800/10"
 							onClick={handleDeleteClick}
 						>
-							<div className="i-solar-trash-bin-trash-bold" />
+							<div className="i-solar-trash-bin-trash-linear" />
 							Delete
 						</button>
 					)}

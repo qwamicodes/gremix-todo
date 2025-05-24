@@ -1,0 +1,23 @@
+import type { Task } from "@prisma/client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+export function useTaskDelete(task: Task) {
+	const queryClient = useQueryClient();
+
+	const remove = useMutation({
+		mutationFn: () => deleteTask(task.id),
+		onSuccess: async () => {
+			return await queryClient.invalidateQueries({ queryKey: ["tasks"] });
+		},
+	});
+
+	return remove;
+}
+
+export async function deleteTask(taskId: number): Promise<void> {
+	await fetch("/list", {
+		method: "DELETE",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ taskId }),
+	});
+}

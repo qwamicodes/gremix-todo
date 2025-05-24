@@ -44,13 +44,13 @@ export async function createComment({
 	return data.comment;
 }
 
-export function useComments(taskId: number) {
+export function useComments(taskId: number, enabled = false) {
 	const queryClient = useQueryClient();
 
 	const query = useQuery({
 		queryKey: ["comments", taskId],
 		queryFn: () => fetchComments(taskId),
-		enabled: !!taskId,
+		enabled: !!taskId && enabled,
 	});
 
 	const create = useMutation({

@@ -2,8 +2,6 @@ import React from "react";
 import { useTasks } from "~/lib/use-tasks";
 
 export function TaskComposer() {
-	const [inProgress, setInProgress] = React.useState(false);
-
 	const formRef = React.useRef<HTMLFormElement>(null);
 	const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -17,17 +15,13 @@ export function TaskComposer() {
 
 		if (!title.trim()) return;
 
-		setInProgress(true);
-
 		create.mutate(
-			{ title, assignee: "notgr", author: "notgr" },
+			{ title: title.trim(), assignee: "notgr", author: "notgr" },
 			{
 				onSuccess: () => {
 					formRef.current?.reset();
-					inputRef.current?.focus();
-				},
-				onSettled: () => {
-					setInProgress(false);
+					// wait enough for the disabled prop to be removed
+					setTimeout(() => inputRef.current?.focus(), 100);
 				},
 			},
 		);
@@ -48,7 +42,7 @@ export function TaskComposer() {
 				placeholder="What needs done?"
 				name="title"
 				className="w-full font-medium bg-transparent border-none outline-none focus:outline-none focus:ring-0 p-0"
-				disabled={inProgress}
+				disabled={create.isPending}
 				ref={inputRef}
 			/>
 		</form>
