@@ -12,24 +12,12 @@ interface Props {
 }
 
 export function CommentMenu({ onDelete }: Props) {
-	const [open, setOpen] = React.useState(false);
-
 	return (
 		<Popover placement="bottom-end">
 			<PopoverTrigger asChild>
 				<button
 					type="button"
 					className="flex items-center justify-center size-8 me-2 dark:bg-neutral-800/50 dark:hover:bg-neutral-800 hover:bg-stone-200 rounded-full text-secondary"
-					onClick={(e) => {
-						e.stopPropagation();
-						setOpen(!open);
-					}}
-					onKeyDown={(e) => {
-						if (e.key === "Enter" || e.key === " ") {
-							e.preventDefault();
-							setOpen(!open);
-						}
-					}}
 				>
 					<div className="i-solar-menu-dots-bold" />
 				</button>
@@ -61,7 +49,9 @@ function Menu({ onDelete }: Props) {
 		>
 			{confirmingDelete ? (
 				<div className="flex items-center gap-3 px-3 py-2">
-					<span className="whitespace-nowrap text-secondary">Are you sure?</span>
+					<span className="whitespace-nowrap text-secondary">
+						Are you sure?
+					</span>
 					<button
 						type="button"
 						className="i-lucide-check w-5 h-5 text-red-500 animate-fade-in animate-duration-200 "
