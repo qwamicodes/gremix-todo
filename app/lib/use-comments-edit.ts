@@ -4,18 +4,13 @@ import type { Comment } from "./types";
 export function useCommentEdit(taskId: number) {
 	const queryClient = useQueryClient();
 
-	const edit = useMutation({
-		mutationKey: ["edit-comment"],
+	return useMutation({
 		mutationFn: updateCommentRequest,
-		onSuccess: (updatedComment) => {
-			queryClient.setQueryData<Comment[]>(["comments", taskId], (old = []) =>
-				old.map((c) => (c.id === updatedComment.id ? updatedComment : c)),
-			);
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["comments", taskId] });
 			queryClient.invalidateQueries({ queryKey: ["tasks"] });
 		},
 	});
-
-	return edit;
 }
 
 async function updateCommentRequest({

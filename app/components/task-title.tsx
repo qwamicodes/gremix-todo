@@ -23,13 +23,16 @@ export function TaskTitle({ task }: Props) {
 				</span>
 			)}
 
-			<span
+			<div
 				className={clsx({
 					"line-through font-normal text-secondary": task.status === "done",
 				})}
 			>
 				{displayTitle}
-			</span>
+				<span className="text-secondary ms-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+					#{task.id}
+				</span>
+			</div>
 		</div>
 	);
 }

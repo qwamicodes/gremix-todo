@@ -87,9 +87,6 @@ export function TodoItem({ task }: Props) {
 						) : (
 							<>
 								<TaskTitle task={task} />{" "}
-								<span className="text-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-									#{task.id}
-								</span>
 							</>
 						)}
 					</div>
