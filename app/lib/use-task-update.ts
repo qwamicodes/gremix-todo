@@ -1,8 +1,10 @@
 import type { Task } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRevalidator } from "react-router-dom";
 
 export function useTaskUpdate(task: Task) {
 	const queryClient = useQueryClient();
+	const { revalidate } = useRevalidator();
 
 	const update = useMutation({
 		mutationKey: ["task", task.id],
@@ -10,7 +12,10 @@ export function useTaskUpdate(task: Task) {
 			return await updateTaskRequest({ taskId: task.id, updates });
 		},
 		onSuccess: async () => {
-			return await queryClient.invalidateQueries({ queryKey: ["tasks"] });
+			return await Promise.all([
+				queryClient.invalidateQueries({ queryKey: ["tasks"] }),
+				revalidate(),
+			]);
 		},
 	});
 
