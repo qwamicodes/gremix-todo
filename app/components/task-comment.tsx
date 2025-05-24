@@ -8,14 +8,14 @@ import { useFetcher, useLoaderData } from "@remix-run/react";
 import { useCommentEdit } from "~/lib/use-comments-edit";
 import { EditCommentInput } from "./edit-comment-input";
 import type { loader } from "~/routes/_index";
+import { useCommentDelete } from "~/lib/use-comment-delete";
 
 interface TaskCommentProps {
 	taskId: number;
 	comment: Comment;
-	onDelete: () => void;
 }
 
-function TaskComment({ comment, onDelete, taskId }: TaskCommentProps) {
+function TaskComment({ comment, taskId }: TaskCommentProps) {
 	const [isEditing, setIsEditing] = React.useState(false);
 	const [draft, setDraft] = React.useState("");
 
@@ -23,6 +23,7 @@ function TaskComment({ comment, onDelete, taskId }: TaskCommentProps) {
 	const { user } = useLoaderData<typeof loader>();
 
 	const edit = useCommentEdit(taskId);
+	const remove = useCommentDelete(taskId);
 
 	React.useEffect(() => {
 		if (isEditing) {
@@ -85,7 +86,7 @@ function TaskComment({ comment, onDelete, taskId }: TaskCommentProps) {
 
 					{user.id === comment.authorId && !comment.deletedAt && (
 						<CommentMenu
-							onDelete={onDelete}
+							onDelete={() => remove.mutate(comment.id)}
 							onEdit={() => setIsEditing(true)}
 						/>
 					)}

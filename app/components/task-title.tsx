@@ -1,4 +1,3 @@
-import React from "react";
 import clsx from "clsx";
 import type { Task } from "~/lib/types";
 import { getPriority } from "~/lib/get-priority";
@@ -12,11 +11,7 @@ export function TaskTitle({ task }: Props) {
 	const displayTitle = task.title.replace(/^!+/, "").trim();
 
 	return (
-		<div
-			className={clsx("font-medium flex items-center gap-2", {
-				"line-through font-normal text-secondary": task.status === "done",
-			})}
-		>
+		<div className="font-medium flex items-center gap-2">
 			{priority && (
 				<span
 					className={clsx(
@@ -28,7 +23,13 @@ export function TaskTitle({ task }: Props) {
 				</span>
 			)}
 
-			{displayTitle}
+			<span
+				className={clsx({
+					"line-through font-normal text-secondary": task.status === "done",
+				})}
+			>
+				{displayTitle}
+			</span>
 		</div>
 	);
 }
