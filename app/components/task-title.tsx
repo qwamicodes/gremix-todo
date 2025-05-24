@@ -19,7 +19,10 @@ export function TaskTitle({ task }: Props) {
 		>
 			{priority && (
 				<span
-					className={`rounded p-0.5 text-xs font-semibold ${priority.color}`}
+					className={clsx(
+						"rounded p-0.5 text-xs font-semibold",
+						priority.color,
+					)}
 				>
 					{priority.label}
 				</span>

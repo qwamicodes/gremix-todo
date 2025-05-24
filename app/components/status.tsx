@@ -25,8 +25,7 @@ function Status({ task }: StatusProps) {
 				onClick={(e) => e.stopPropagation()}
 				className="bg-transparent"
 			>
-				<button
-					type="button"
+				<div
 					className={clsx(
 						"rounded-full bg-transparent flex items-center justify-center",
 					)}
@@ -36,7 +35,7 @@ function Status({ task }: StatusProps) {
 							"i-svg-spinners-270-ring": update.status === "pending",
 						})}
 					/>
-				</button>
+				</div>
 			</PopoverTrigger>
 			<PopoverContent
 				onClick={(e) => e.stopPropagation()}

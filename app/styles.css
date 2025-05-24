@@ -74,8 +74,6 @@ code {
 }
 
 .comment-article pre {
-    max-width: 320px;
-
   @apply overflow-x-auto rounded-xl bg-neutral-100 dark:bg-neutral-800 p-3 text-sm max-w-7xl max-h-3xl;
 
 }

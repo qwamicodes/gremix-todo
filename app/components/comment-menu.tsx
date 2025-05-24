@@ -15,12 +15,9 @@ export function CommentMenu({ onDelete, onEdit }: Props) {
 	return (
 		<Popover placement="bottom-end">
 			<PopoverTrigger asChild>
-				<button
-					type="button"
-					className="flex items-center justify-center size-8 me-2 dark:bg-neutral-800/50 dark:hover:bg-neutral-800 hover:bg-stone-200 rounded-full text-secondary"
-				>
+				<div className="flex items-center justify-center size-8 me-2 dark:bg-neutral-800/50 dark:hover:bg-neutral-800 hover:bg-stone-200 rounded-full text-secondary">
 					<div className="i-solar-menu-dots-bold" />
-				</button>
+				</div>
 			</PopoverTrigger>
 
 			<PopoverContent className="z-50 popover-content p-0">
