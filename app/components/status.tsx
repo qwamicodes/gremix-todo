@@ -21,10 +21,9 @@ function Status({ task }: StatusProps) {
 
 	return (
 		<Popover placement="bottom-start">
-			<PopoverTrigger asChild>
-				<button
+			<PopoverTrigger>
+				<div
 					data-status-button
-					type="button"
 					className={clsx(
 						"rounded-full bg-transparent flex items-center justify-center",
 					)}
@@ -34,7 +33,7 @@ function Status({ task }: StatusProps) {
 							"i-svg-spinners-270-ring": update.status === "pending",
 						})}
 					/>
-				</button>
+				</div>
 			</PopoverTrigger>
 			<PopoverContent className="z-50 popover-content animate-fade-in animate-duration-200">
 				<StatusMenu

@@ -13,22 +13,12 @@ function Assignee({ task }: AssigneeProps) {
 
 	return (
 		<Popover placement="bottom-end">
-			<PopoverTrigger asChild>
-				<button
+			<PopoverTrigger>
+				<div
 					data-assignee-button
-					type="button"
 					className={clsx(
 						"flex items-center gap-1 bg-transparent text-sm font-mono text-secondary hover:bg-stone-200 dark:hover:bg-neutral-800 px-1 py-0.5 rounded-full",
 					)}
-					onClick={(e) => {
-						e.stopPropagation();
-					}}
-					onKeyDown={(e) => {
-						e.stopPropagation();
-						if (e.key === "Enter" || e.key === " ") {
-							e.preventDefault();
-						}
-					}}
 				>
 					<img
 						src={`https://api.dicebear.com/9.x/dylan/svg?seed=${task.assignee}`}
@@ -36,7 +26,7 @@ function Assignee({ task }: AssigneeProps) {
 						alt={task.assignee}
 					/>{" "}
 					@{task.assignee}
-				</button>
+				</div>
 			</PopoverTrigger>
 
 			<PopoverContent className="z-50 popover-content animate-fade-in animate-duration-200">
