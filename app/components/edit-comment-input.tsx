@@ -40,18 +40,20 @@ function EditCommentInput({
 				onChange={(e) => onChange(e.target.value)}
 				onKeyDown={handleKeyDown}
 				rows={Math.min(5, Math.max(2, value.split("\n").length))}
-				className="px-2 py-1 rounded-md border border-stone-300 dark:border-neutral-700 dark:bg-neutral-800 w-full text-sm"
+				className="px-2 py-1 border-b rounded-t-xl border-0 border-stone-300 dark:border-neutral-700 dark:bg-neutral-800 w-full bg-stone-200/40 focus:outline-none focus:ring-0"
 			/>
+
 			<button
 				type="button"
 				onClick={onConfirm}
-				className="i-lucide-check text-green-600 dark:text-green-400 w-5 h-5"
+				className="i-lucide-check text-secondary w-5 h-5"
 				aria-label="Confirm"
 			/>
+
 			<button
 				type="button"
 				onClick={onCancel}
-				className="i-lucide-x text-red-600 dark:text-red-400 w-5 h-5"
+				className="i-lucide-x text-secondary w-5 h-5"
 				aria-label="Cancel"
 			/>
 		</div>

@@ -1,5 +1,4 @@
 import React from "react";
-import { Input } from "./input";
 
 interface EditTaskInputProps {
 	value: string;
@@ -35,30 +34,21 @@ export function EditTaskInput({
 
 	return (
 		<div className="flex flex-1 items-center gap-2" data-edit-task-input>
-			<Input
+			<input
 				ref={inputRef}
 				value={value}
 				onChange={(e) => onChange(e.target.value)}
 				onKeyDown={handleKeyDown}
-				className="px-2 py-1 border text-sm"
+				className="px-2 py-0 font-medium border-b border-0 bg-transparent dark:border-neutral-700 w-full bg-stone-200/40 focus:outline-none focus:ring-0"
 			/>
 			<div className="flex gap-2 items-center">
-				<button
-					type="button"
-					onClick={(e) => {
-							e.stopPropagation();
-						onConfirm();
-					}}
-					className="i-lucide-check text-green-600 dark:text-green-400 w-5 h-5"
-					aria-label="Confirm"
-				/>
 				<button
 					type="button"
 					onClick={(e) => {
 						e.stopPropagation();
 						onCancel();
 					}}
-					className="i-lucide-x text-red-600 dark:text-red-400 w-5 h-5"
+					className="i-lucide-x text-secondary w-5 h-5"
 					aria-label="Cancel"
 				/>
 			</div>

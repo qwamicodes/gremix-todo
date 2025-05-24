@@ -1,14 +1,14 @@
-import React from "react";
+import { useFetcher, useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
+import React from "react";
 import { authorTime } from "~/lib/dates";
 import type { Comment } from "~/lib/types";
+import { useCommentDelete } from "~/lib/use-comment-delete";
+import { useCommentEdit } from "~/lib/use-comments-edit";
+import type { loader } from "~/routes/_index";
 import { CommentMenu } from "./comment-menu";
 import { Content } from "./content";
-import { useFetcher, useLoaderData } from "@remix-run/react";
-import { useCommentEdit } from "~/lib/use-comments-edit";
 import { EditCommentInput } from "./edit-comment-input";
-import type { loader } from "~/routes/_index";
-import { useCommentDelete } from "~/lib/use-comment-delete";
 
 interface TaskCommentProps {
 	taskId: number;
@@ -29,7 +29,7 @@ function TaskComment({ comment, taskId }: TaskCommentProps) {
 		if (isEditing) {
 			fetcher.load(`/edit-comment?id=${comment.id}`);
 		}
-	}, [isEditing, comment.id]);
+	}, [isEditing, comment.id, fetcher.load]);
 
 	React.useEffect(() => {
 		if (fetcher.data?.content && isEditing) {
