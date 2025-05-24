@@ -38,6 +38,13 @@ export function TodoItem({ task }: Props) {
 		setIsEditing(true);
 	};
 
+	function updateTask() {
+		if (!draft.trim()) return;
+
+		update.mutate({ title: draft.trim() });
+		setIsEditing(false);
+	}
+
 	const handleClick = useDoubleClick(handleToggleOpen, handleEdit);
 
 	return (
@@ -71,10 +78,7 @@ export function TodoItem({ task }: Props) {
 							<EditTaskInput
 								value={draft}
 								onChange={setDraft}
-								onConfirm={() => {
-									update.mutate({ title: draft });
-									setIsEditing(false);
-								}}
+								onConfirm={updateTask}
 								onCancel={() => {
 									setDraft(task.title);
 									setIsEditing(false);

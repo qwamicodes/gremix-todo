@@ -36,6 +36,18 @@ function TaskComment({ comment, onDelete, taskId }: TaskCommentProps) {
 		}
 	}, [fetcher.data, isEditing]);
 
+	function handleEdit() {
+		if (!draft.trim()) return;
+
+		edit.mutate({
+			id: comment.id,
+			content: draft.trim(),
+			authorId: user.id,
+		});
+
+		setIsEditing(false);
+	}
+
 	return (
 		<li>
 			<div className="flex flex-col gap-2 p-2 ms-5 ps-7 border-s-2 border-stone-200/60 dark:border-neutral-700">
@@ -60,14 +72,7 @@ function TaskComment({ comment, onDelete, taskId }: TaskCommentProps) {
 							<EditCommentInput
 								value={draft}
 								onChange={setDraft}
-								onConfirm={() => {
-									edit.mutate({
-										id: comment.id,
-										content: draft.trim(),
-										authorId: user.id,
-									});
-									setIsEditing(false);
-								}}
+								onConfirm={handleEdit}
 								onCancel={() => {
 									setIsEditing(false);
 									setDraft("");
