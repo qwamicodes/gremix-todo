@@ -8,7 +8,7 @@ export function StatusBar() {
 	const { done, total } = useLoaderData<typeof loader>();
 	const [task] = useAtom(hoveredTask);
 
-	const percentage = Math.round((done / total) * 100);
+	const percentage = total === 0 ? 0 : Math.round((done / total) * 100);
 
 	return (
 		<div className="flex w-full bg-blue-500 px-4 font-mono text-sm text-white py-1 justify-between">
