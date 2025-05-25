@@ -57,12 +57,12 @@ function Menu({ onDelete, onEdit }: Props) {
 							<div className="flex gap-2">
 								<button
 									type="button"
-									className="i-lucide-check w-5 h-5 text-red-500 animate-fade-in"
+									className="i-lucide-check w-5 h-5 text-red-500 animate-zoom-in animate-duration-200"
 									onClick={onDelete}
 								/>
 								<button
 									type="button"
-									className="i-lucide-x w-5 h-5 text-secondary animate-fade-in"
+									className="i-lucide-x w-5 h-5 text-secondary animate-zoom-in animate-duration-250"
 									onClick={() => setConfirmingDelete(false)}
 								/>
 							</div>
