@@ -1,6 +1,7 @@
 import type { Status, Task } from "@prisma/client";
 import clsx from "clsx";
 import React from "react";
+import { statuses } from "~/lib/statuses";
 import { useTaskDelete } from "~/lib/use-task-delete";
 import { usePopoverContext } from "./popover";
 
@@ -8,30 +9,6 @@ interface StatusMenuProps {
 	task: Task;
 	onStatusUpdate: (status: Status) => void;
 }
-
-interface StatusProps {
-	id: Status;
-	label: string;
-	icon: string;
-}
-
-const statuses: StatusProps[] = [
-	{
-		id: "pending",
-		label: "Pending",
-		icon: "i-lucide-circle text-secondary",
-	},
-	{
-		id: "inProgress",
-		label: "In Progress",
-		icon: "i-lucide-loader-circle text-amber-500",
-	},
-	{
-		id: "done",
-		label: "Done",
-		icon: "i-solar-check-circle-bold text-indigo-500",
-	},
-];
 
 export function StatusMenu({ task, onStatusUpdate }: StatusMenuProps) {
 	const [confirmingDelete, setConfirmingDelete] = React.useState(false);
@@ -106,7 +83,7 @@ export function StatusMenu({ task, onStatusUpdate }: StatusMenuProps) {
 					) : (
 						<button
 							type="button"
-							className="w-full text-red-500 rounded-lg flex gap-2 items-center bg-transparent py-2 px-3 hover:bg-red-100 dark:hover:bg-red-800/10"
+							className="w-full text-red-500 rounded-lg flex gap-2 items-center bg-transparent py-2 px-3 hover:bg-red-600/5"
 							onClick={() => setConfirmingDelete(true)}
 						>
 							<div className="i-solar-trash-bin-trash-linear" />

@@ -1,4 +1,4 @@
-import { Link, useLoaderData } from "react-router";
+import { Link, useLoaderData, useNavigate } from "react-router";
 import type { loader } from "~/routes/_index";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
@@ -26,6 +26,14 @@ export function UserButton() {
 
 function UserMenu() {
 	const { user } = useLoaderData<typeof loader>();
+	const navigate = useNavigate();
+
+	const handleLogout = () => {
+		const confirmed = window.confirm("Are you sure you want to logout?");
+		if (confirmed) {
+			navigate("/logout");
+		}
+	};
 
 	return (
 		<div className="bg-stone-50 dark:(bg-neutral-900 border-neutral-800) min-w-12rem rounded-lg overflow-hidden border shadow-lg">
@@ -39,7 +47,7 @@ function UserMenu() {
 				{user.superUser && (
 					<li>
 						<Link className="block px-2 py-1" to="/new-user">
-							Add new user
+							Invite user
 						</Link>
 					</li>
 				)}
@@ -51,9 +59,14 @@ function UserMenu() {
 				</li>
 
 				<li>
-					<Link className="block px-2 py-1" to="/logout">
+					<button
+						type="button"
+						onClick={handleLogout}
+						className="block w-full px-2 py-1 text-left flex gap-2 items-center text-red-600 dark:bg-neutral-900 bg-stone-50"
+					>
+						<div className="i-solar-logout-2-outline" />
 						Logout
-					</Link>
+					</button>
 				</li>
 			</ul>
 		</div>
