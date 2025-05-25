@@ -152,12 +152,12 @@ export default function Login() {
 
 	function onSubmit(data: FieldValues) {
 		const actionUrl = invite ? `/login?invite=${invite}` : "/login";
+
 		submit(JSON.stringify(data), {
 			method: "POST",
 			encType: "application/json",
 			action: actionUrl,
 		});
-		reset();
 	}
 
 	return (
