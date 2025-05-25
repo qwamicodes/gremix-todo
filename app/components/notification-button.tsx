@@ -1,6 +1,6 @@
-import { useLoaderData } from "react-router";
 import clsx from "clsx";
 import parse from "html-react-parser";
+import { useLoaderData } from "react-router";
 import { TASK_MENTION_REGEX, USER_MENTION_REGEX } from "~/lib/constants";
 import { authorTime } from "~/lib/dates";
 import { useNotifications } from "~/lib/use-notifications";
@@ -46,6 +46,10 @@ function NotificationsList() {
 				Notifications ({unreadNotifications})
 			</header>
 
+			{query.data?.pages.flat().length === 0 && !query.isLoading && (
+				<div className="text-secondary p-2">No notifications</div>
+			)}
+
 			<ul className="divide-y divide-stone-200/50 dark:divide-neutral-800">
 				{query.data?.pages.flat().map((it) => {
 					return (
@@ -55,6 +59,10 @@ function NotificationsList() {
 					);
 				})}
 			</ul>
+
+			{query.isLoading && (
+				<div className="text-secondary text-sm p-2">Loading...</div>
+			)}
 		</div>
 	);
 }
