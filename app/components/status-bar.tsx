@@ -1,5 +1,5 @@
-import { useLoaderData } from "react-router";
 import { useAtom } from "jotai";
+import { useLoaderData } from "react-router";
 import { authorTime } from "~/lib/dates";
 import { hoveredTask } from "~/lib/store";
 import type { loader } from "~/routes/_index";
@@ -19,13 +19,23 @@ export function StatusBar() {
 				</div>
 			</div>
 
-			<div>
+			<div className="flex items-center gap-2">
 				{task && (
 					<span>
 						#{task.id} Created by @{task.author.username} &bull;{" "}
 						{authorTime(task.createdAt)}
 					</span>
 				)}
+
+				<div>
+					<a
+						href="https://github.com/blackmann/todo-list"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						<div className="i-lucide-github" />
+					</a>
+				</div>
 			</div>
 		</div>
 	);

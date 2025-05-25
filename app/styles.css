@@ -17,14 +17,14 @@
   font-family: 'DM Mono', monospace;
 }
 
-input::placeholder, textarea::placeholder {
+input::placeholder,
+textarea::placeholder {
   @apply text-stone-500/90 dark:text-neutral-500/90;
 }
 
 code {
   font-family: 'DM Mono', monospace;
 }
-
 
 .shiki {
   counter-reset: step;
@@ -44,7 +44,7 @@ code {
   margin-right: 1.5rem;
   display: inline-block;
   text-align: right;
-  color: rgba(115, 138, 148, .4)
+  color: rgba(115, 138, 148, .4);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -65,7 +65,7 @@ code {
   @apply rounded-xl;
 }
 
-.comment-article p + p {
+.comment-article p+p {
   @apply mt-2;
 }
 
@@ -85,5 +85,5 @@ code {
 
 code:not(.shiki code):not(.shiki .line code) {
   font-family: 'DM Mono', monospace;
-  @apply px-1 py-0 rounded-lg bg-stone-200 dark:bg-neutral-800
+  @apply px-1 py-0 rounded-lg bg-stone-200 dark:bg-neutral-800;
 }
