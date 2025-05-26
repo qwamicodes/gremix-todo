@@ -4,7 +4,6 @@ import type { Task } from "./types";
 
 export const hoveredTask = atom<Task | undefined>(undefined);
 
-export const assigneeAtom = atom<string>("");
-export const searchAtom = atom<string>("");
-
+export const assigneeAtom = atom<string | undefined>(undefined);
+export const searchAtom = atom<string | undefined>(undefined);
 export const filterStatusAtom = atom<Status | undefined>(undefined);

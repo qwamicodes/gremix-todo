@@ -18,7 +18,7 @@ export function Header() {
 
 	React.useEffect(() => {
 		const timeout = setTimeout(() => {
-			setSearch(input);
+			setSearch(input || undefined);
 		}, 300);
 
 		return () => clearTimeout(timeout);
