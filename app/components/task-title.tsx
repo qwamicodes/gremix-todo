@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import parse from "html-react-parser";
 import { getPriority } from "~/lib/get-priority";
 import type { Task } from "~/lib/types";
 
@@ -32,7 +33,7 @@ export function TaskTitle({ task }: Props) {
 						"line-through font-normal text-secondary": task.status === "done",
 					})}
 				>
-					{displayTitle}
+					{parse(renderTitle(displayTitle))}
 				</span>
 				<span className="text-secondary ms-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
 					#{task.id}
@@ -40,4 +41,11 @@ export function TaskTitle({ task }: Props) {
 			</div>
 		</div>
 	);
+}
+
+const TAG_REGEX = /#([a-zA-Z][a-zA-Z0-9-_]*[a-zA-Z0-9])/g;
+function renderTitle(title: string) {
+	return title.replace(TAG_REGEX, (match, p1) => {
+		return `<span class="bg-green-500 px-2 rounded-lg font-mono text-sm text-white dark:text-green-500 dark:bg-green-500/10">${match}</span>`;
+	});
 }
