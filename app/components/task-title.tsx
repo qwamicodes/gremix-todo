@@ -33,7 +33,7 @@ export function TaskTitle({ task }: Props) {
 						"line-through font-normal text-secondary": task.status === "done",
 					})}
 				>
-					{parse(renderTitle(displayTitle))}
+					{parse(renderTitle(displayTitle, task.status === "done"))}
 				</span>
 				<span className="text-secondary ms-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
 					#{task.id}
@@ -44,8 +44,13 @@ export function TaskTitle({ task }: Props) {
 }
 
 const TAG_REGEX = /#([a-zA-Z][a-zA-Z0-9-_]*[a-zA-Z0-9])/g;
-function renderTitle(title: string) {
+function renderTitle(title: string, done: boolean) {
+	const style = clsx("px-2 rounded-lg font-mono text-sm", {
+		"bg-green-500 text-white dark:text-green-500 dark:bg-green-500/10": !done,
+		"bg-stone-400 text-white dark:bg-neutral-800 dark:text-neutral-300": done,
+	});
+
 	return title.replace(TAG_REGEX, (match, p1) => {
-		return `<span class="bg-green-500 px-2 rounded-lg font-mono text-sm text-white dark:text-green-500 dark:bg-green-500/10">${match}</span>`;
+		return `<span class="${style}">${match}</span>`;
 	});
 }
