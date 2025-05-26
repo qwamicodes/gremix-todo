@@ -65,12 +65,20 @@ code {
   @apply rounded-xl;
 }
 
-.comment-article p+p {
+.comment-article p+:is(p, ul, ol, pre) {
+  @apply mt-2;
+}
+
+.comment-article :is(p, ul, ol, pre) + p {
   @apply mt-2;
 }
 
 .comment-article ul {
   @apply list-disc list-inside;
+}
+
+.comment-article ol {
+  @apply list-decimal list-inside;
 }
 
 .comment-article pre {
