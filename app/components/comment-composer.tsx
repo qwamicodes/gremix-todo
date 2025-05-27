@@ -67,7 +67,7 @@ export function CommentComposer({ taskId }: Props) {
 
 			<div className="flex w-full items-center">
 				<textarea
-					className="flex-1 bg-transparent border-none outline-none focus:outline-none focus:ring-0 p-0 overflow-y-auto overflow-x-hidden max-h-28rem"
+					className="flex-1 bg-transparent border-none outline-none focus:outline-none focus:ring-0 p-0 overflow-y-auto overflow-x-hidden max-h-18rem"
 					placeholder="Add a comment"
 					name="content"
 					rows={3}
