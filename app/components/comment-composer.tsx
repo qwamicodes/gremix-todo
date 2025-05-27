@@ -35,20 +35,18 @@ export function CommentComposer({ taskId }: Props) {
 		);
 	};
 
-	const handleResize = React.useCallback(() => {
+	const handleResize = React.useRef(() => {
 		const textarea = inputRef.current;
 
 		if (textarea) {
 			textarea.style.height = "auto";
 			textarea.style.height = `${textarea.scrollHeight}px`;
 		}
-	}, []);
+	});
 
 	React.useEffect(() => {
-		if (inputRef.current) {
-			handleResize();
-		}
-	}, [handleResize]);
+		handleResize.current();
+	}, []);
 
 	return (
 		<form
@@ -73,8 +71,8 @@ export function CommentComposer({ taskId }: Props) {
 					rows={3}
 					ref={inputRef}
 					disabled={create.isPending}
-					onChange={handleResize}
-					onInput={handleResize}
+					onChange={handleResize.current}
+					onInput={handleResize.current}
 				/>
 			</div>
 
