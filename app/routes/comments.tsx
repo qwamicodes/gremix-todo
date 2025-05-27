@@ -1,4 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
+import { type CreateMentionOpts, createMentions } from "~/lib/mentions.server";
 import { prisma } from "~/lib/prisma.server";
 import { render } from "~/lib/render.server";
 import { badRequest } from "~/lib/responses";
@@ -69,7 +70,26 @@ export async function action({ request }: ActionFunctionArgs) {
 
 	const data = await request.json();
 
-	const comment = await prisma.comment.create({ data });
+	const comment = await prisma.comment.create({
+		data,
+		include: {
+			author: {
+				select: {
+					id: true,
+					username: true,
+				},
+			},
+		},
+	});
+
+	const opts: CreateMentionOpts = {
+		content: comment.content,
+		taskId: comment.taskId,
+		authorId: comment.authorId,
+		authorUsername: comment.author.username,
+	};
+
+	await createMentions(opts);
 
 	comment.content = await render(comment.content);
 
