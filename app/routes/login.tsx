@@ -17,6 +17,7 @@ import { USERNAME_REGEX } from "~/lib/constants";
 import { authCookie } from "~/lib/cookies.server";
 import { prisma } from "~/lib/prisma.server";
 import { badRequest } from "~/lib/responses";
+import { sendWebhook } from "~/lib/webhook";
 
 export async function loader({ request }: LoaderFunctionArgs) {
 	try {
@@ -112,6 +113,10 @@ export async function action({ request }: ActionFunctionArgs) {
 							username,
 						},
 					})),
+			});
+
+			sendWebhook("user.joined", {
+				user,
 			});
 		}
 

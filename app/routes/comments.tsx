@@ -3,6 +3,7 @@ import { type CreateMentionOpts, createMentions } from "~/lib/mentions.server";
 import { prisma } from "~/lib/prisma.server";
 import { render } from "~/lib/render.server";
 import { badRequest } from "~/lib/responses";
+import { sendWebhook } from "~/lib/webhook";
 
 export async function loader({ request }: LoaderFunctionArgs) {
 	const url = new URL(request.url);
@@ -74,10 +75,9 @@ export async function action({ request }: ActionFunctionArgs) {
 		data,
 		include: {
 			author: {
-				select: {
-					id: true,
-					username: true,
-				},
+				omit: {
+					password: true
+				}
 			},
 		},
 	});
@@ -90,6 +90,19 @@ export async function action({ request }: ActionFunctionArgs) {
 	};
 
 	await createMentions(opts);
+
+	const task = await prisma.task.findUnique({
+		where: { id: comment.taskId },
+		include: { assignee: true },
+	});
+
+	if (task) {
+		sendWebhook("comment.created", {
+			task,
+			user: comment.author,
+			comment: comment.content,
+		});
+	}
 
 	comment.content = await render(comment.content);
 
