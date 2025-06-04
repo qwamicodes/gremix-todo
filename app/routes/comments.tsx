@@ -76,8 +76,13 @@ export async function action({ request }: ActionFunctionArgs) {
 		include: {
 			author: {
 				omit: {
-					password: true
-				}
+					password: true,
+				},
+			},
+			task: {
+				select: {
+					projectId: true,
+				},
 			},
 		},
 	});
@@ -87,6 +92,7 @@ export async function action({ request }: ActionFunctionArgs) {
 		taskId: comment.taskId,
 		authorId: comment.authorId,
 		authorUsername: comment.author.username,
+		projectId: comment.task.projectId,
 	};
 
 	await createMentions(opts);

@@ -1,10 +1,10 @@
 import React from "react";
 import { useLoaderData, useRevalidator } from "react-router";
 import { useTasks } from "~/lib/use-tasks";
-import type { loader } from "~/routes/_index";
+import type { loader } from "~/routes/$project";
 
 export function TaskComposer() {
-	const { user } = useLoaderData<typeof loader>();
+	const { user, project } = useLoaderData<typeof loader>();
 
 	const formRef = React.useRef<HTMLFormElement>(null);
 	const inputRef = React.useRef<HTMLInputElement>(null);
@@ -21,7 +21,12 @@ export function TaskComposer() {
 		if (!title.trim()) return;
 
 		create.mutate(
-			{ title: title.trim(), assigneeId: user.id, authorId: user.id },
+			{
+				title: title.trim(),
+				assigneeId: user.id,
+				authorId: user.id,
+				projectId: project.id,
+			},
 			{
 				onSuccess: () => {
 					formRef.current?.reset();

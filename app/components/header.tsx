@@ -10,6 +10,7 @@ import { Input } from "./input";
 import { NotificationsButton } from "./notification-button";
 import { Select } from "./select";
 import { UserButton } from "./user-button";
+import { ProjectButton } from "./project-button";
 
 export function Header() {
 	const { users } = useLoaderData<typeof loader>();
@@ -65,16 +66,22 @@ export function Header() {
 
 				<div>
 					<div
-						className={clsx("i-svg-spinners-270-ring opacity-0 transition-opacity duration-300", {
-							"opacity-100": isFetching,
-						})}
+						className={clsx(
+							"i-svg-spinners-270-ring opacity-0 transition-opacity duration-300",
+							{
+								"opacity-100": isFetching,
+							},
+						)}
 					/>
 				</div>
 			</div>
 
 			<div className="flex items-center gap-2">
 				<NotificationsButton />
-				<UserButton />
+				<div className="flex rounded-full text-secondary divide-x divide-stone-300/50 dark:divide-neutral-700/50 border dark:border-neutral-700/50 overflow-hidden">
+					<ProjectButton />
+					<UserButton />
+				</div>
 			</div>
 		</div>
 	);
