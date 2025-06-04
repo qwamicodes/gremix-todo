@@ -1,4 +1,5 @@
 import type { Task } from "@prisma/client";
+import { prisma } from "./prisma.server";
 import type { AnyWebhookEvent, EventType, WebhookEvent } from "./webhook-types";
 
 interface DiscordWebhookPayload {
@@ -35,7 +36,7 @@ export async function sendDiscord(
 	url: string,
 ): Promise<boolean> {
 	try {
-		const payload = createWebhookPayload(event);
+		const payload = await createWebhookPayload(event);
 		const response = await fetch(url, {
 			method: "POST",
 			headers: {
@@ -50,11 +51,12 @@ export async function sendDiscord(
 	}
 }
 
-function createWebhookPayload(event: AnyWebhookEvent): DiscordWebhookPayload {
-	const appName = "Todo List";
+async function createWebhookPayload(
+	event: AnyWebhookEvent,
+): Promise<DiscordWebhookPayload> {
 	const baseUrl =
 		process.env.BASE_URL ||
-		(process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "");
+		(process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "");
 	const botName = process.env.DISCORD_BOT_NAME || "kovacs";
 
 	const payload: DiscordWebhookPayload = {
@@ -66,6 +68,21 @@ function createWebhookPayload(event: AnyWebhookEvent): DiscordWebhookPayload {
 		color: getColorForEvent(event.type),
 		timestamp: new Date().toISOString(),
 	};
+
+	if (event.projectId) {
+		const project = await prisma.project.findUnique({
+			where: {
+				id: event.projectId,
+			},
+			select: {
+				name: true,
+			},
+		});
+
+		embed.footer = {
+			text: `📌 ${project?.name}`,
+		};
+	}
 
 	switch (event.type) {
 		case "task.created": {
