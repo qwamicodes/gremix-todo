@@ -75,7 +75,9 @@ export function ProjectForm({ onClose, project }: Props) {
 		<form className="text-sm" onSubmit={handleSubmit(onSubmit)}>
 			<div className="p-3 space-y-3">
 				<div className="flex justify-between gap-2 items-center">
-					<div className="font-medium text-base">Create new project</div>
+					<div className="font-medium text-base">
+						{project ? `Edit ${project?.name}` : "Create new project"}
+					</div>
 					<button
 						type="button"
 						className="bg-transparent cursor-pointer text-secondary"
