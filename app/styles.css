@@ -105,3 +105,10 @@ code:not(.shiki code):not(.shiki .line code) {
 .comment-article li > input[type="checkbox"] {
 	display: none;
 }
+
+@keyframes colorchange {
+  0%   { color: rgb(244, 63, 94); }  /* rose-500 */
+  33%  { color: rgb(249, 115, 22); } /* orange-500 */
+  66%  { color: rgb(34, 197, 94); }  /* green-500 */
+  100% { color: rgb(244, 63, 94); }  /* rose-500 */
+}

@@ -86,7 +86,9 @@ export async function createAccount(
 		});
 	}
 
-	return redirect("/", {
+	const to = user.username === process.env.SPECIAL_PERSON ? "/?confetti=1" : "/";
+
+	return redirect(to, {
 		headers: {
 			"Set-Cookie": await authCookie.serialize({ userId: user.id }),
 		},

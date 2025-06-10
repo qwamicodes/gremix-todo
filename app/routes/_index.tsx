@@ -28,6 +28,15 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 		throw redirect("/logout");
 	}
 
+	const url = new URL(request.url);
+
 	const top = projects[0];
-	return redirect(`/${top.slug}`);
+	const toUrl = new URL(`/${top.slug}`, url);
+	const confetti = url.searchParams.get("confetti");
+
+	if (confetti) {
+		toUrl.searchParams.set("confetti", confetti);
+	}
+
+	return redirect(toUrl.toString());
 };

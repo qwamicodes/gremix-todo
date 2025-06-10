@@ -2,8 +2,9 @@ import { tryit } from "radashi";
 import {
 	type LoaderFunctionArgs,
 	type MetaFunction,
-	redirect,
+	redirect
 } from "react-router";
+import { BabyGlinConfetti } from "~/components/baby-glin-confetti";
 import { Header } from "~/components/header";
 import { StatusBar } from "~/components/status-bar";
 import { Todos } from "~/components/todos";
@@ -72,7 +73,7 @@ export const meta: MetaFunction = () => {
 	];
 };
 
-export default function Index() {
+export default function Project() {
 	return (
 		<div className="flex flex-col h-screen">
 			<Header />
@@ -80,6 +81,8 @@ export default function Index() {
 			<div className="flex-1 h-0">
 				<Todos />
 			</div>
+
+			<BabyGlinConfetti />
 
 			<StatusBar />
 		</div>

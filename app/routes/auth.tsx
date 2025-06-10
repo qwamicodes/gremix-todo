@@ -35,11 +35,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 		return redirect("/");
 	}
 
-	const userCreated = await prisma.user.count();
+	const usersCreated = await prisma.user.count();
 
 	let mode: "login" | "signup" = "login";
 
-	if (userCreated === 0) {
+	if (usersCreated === 0) {
 		mode = "signup";
 	} else if (invite) {
 		const valid = await prisma.inviteToken.findFirst({
@@ -68,7 +68,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 		overrideLink.searchParams.set("login", "1");
 	}
 
-	return { userCreated, mode, invite, overrideLink };
+	return { usersCreated, mode, invite, overrideLink };
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -107,7 +107,7 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Login() {
-	const { userCreated, mode, invite, overrideLink } =
+	const { usersCreated, mode, invite, overrideLink } =
 		useLoaderData<typeof loader>();
 	const actionData = useActionData<typeof action>();
 	const { register, handleSubmit, watch, reset } = useForm();
@@ -133,14 +133,14 @@ export default function Login() {
 			<div className="w-74 rounded-lg border border-gray-200 bg-stone-50 dark:(bg-neutral-900 border-neutral-800) shadow-lg -mt-10rem">
 				<div className="p-4">
 					<h1 className="font-medium">
-						{userCreated === 0
+						{usersCreated === 0
 							? "Create Super User"
 							: mode === "signup"
 								? "Sign Up"
 								: "Login"}
 					</h1>
 					<p className="text-sm text-gray-500 mb-2">
-						{userCreated === 0
+						{usersCreated === 0
 							? "This is a first-time setup. Create a super user account."
 							: mode === "signup"
 								? "Enter a username and password to create your account."
@@ -160,7 +160,7 @@ export default function Login() {
 									pattern: USERNAME_REGEX,
 								})}
 							/>
-							{(userCreated === 0 || mode === "signup") && $username && (
+							{(usersCreated === 0 || mode === "signup") && $username && (
 								<span
 									className={clsx(
 										"absolute right-2 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full animate-fade-in animate-duration-200 ",
@@ -174,7 +174,7 @@ export default function Login() {
 						<div className="relative">
 							<Input
 								type={
-									userCreated === 0 || mode === "signup" ? "text" : "password"
+									usersCreated === 0 || mode === "signup" ? "text" : "password"
 								}
 								placeholder="password"
 								className="font-mono pr-8"
@@ -186,7 +186,7 @@ export default function Login() {
 									},
 								})}
 							/>
-							{(userCreated === 0 || mode === "signup") && (
+							{(usersCreated === 0 || mode === "signup") && (
 								<span
 									className={`
 					absolute right-2 top-1/2 -translate-y-1/2
@@ -203,7 +203,7 @@ export default function Login() {
 								{mode === "signup" ? "Sign Up" : "Login"}
 								<div
 									className={clsx({
-										"i-lucide-crown": userCreated === 0,
+										"i-lucide-crown": usersCreated === 0,
 										"i-lucide-corner-down-left": mode === "signup",
 									})}
 								/>
