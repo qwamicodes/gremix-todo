@@ -1,4 +1,5 @@
 import React from "react";
+import { magicInput } from "~/lib/magic-input";
 
 interface EditInputProps {
 	value: string;
@@ -41,8 +42,42 @@ function EditCommentInput({
 		if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
 			e.preventDefault();
 			onConfirm();
-		} else if (e.key === "Escape") {
+			return;
+		}
+
+		if (e.key === "Escape") {
 			onCancel();
+			return;
+		}
+
+		const textarea = inputRef.current;
+		if (!textarea) return;
+
+		const oldSelectionStart = textarea.selectionStart;
+
+		if (
+			magicInput(e, value, (newValue) => {
+				onChange(newValue);
+
+				handleResize();
+
+				requestAnimationFrame(() => {
+					if (!inputRef.current) return;
+
+					const offset = newValue.length - value.length;
+					const newPos = oldSelectionStart + offset;
+
+					inputRef.current.setSelectionRange(newPos, newPos);
+
+					const { scrollHeight, clientHeight } = inputRef.current;
+					if (scrollHeight > clientHeight) {
+						inputRef.current.scrollTop = scrollHeight;
+					}
+				});
+			})
+		) {
+			e.preventDefault();
+			return;
 		}
 	};
 
