@@ -11,5 +11,5 @@ export const userPrefs = createCookie("user-prefs", {
 export const authCookie = createCookie("auth", {
 	secrets: process.env.COOKIE_SECRET?.split(",") ?? [],
 	maxAge: MAX_COOKIE_AGE,
-	secure: true,
+	secure: process.env.NODE_ENV === "production",
 });
