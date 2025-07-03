@@ -75,7 +75,7 @@ export const meta: MetaFunction = () => {
 
 export default function Project() {
 	return (
-		<div className="flex flex-col h-screen">
+		<div className="flex flex-col h-dvh">
 			<Header />
 
 			<div className="flex-1 h-0">
