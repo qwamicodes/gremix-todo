@@ -17,14 +17,23 @@ services:
     restart: unless-stopped
 
   web:
-    # build: .
     image: ghcr.io/qwamicodes/gremix-todo:latest
     ports:
       - "2288:3000"
-    env_file:
-      - .env
     environment:
+      # Database connection
       DATABASE_URL: "postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-password}@db:5432/${POSTGRES_DB:-todolist}"
+
+      # Application configuration
+      COOKIE_SECRET: ${COOKIE_SECRET}
+      BASE_URL: ${BASE_URL}
+
+      # Webhook configuration (optional)
+      WEBHOOK_URL: ${WEBHOOK_URL:-}
+
+      # Discord integration
+      DISCORD_WEBHOOK_URL: ${DISCORD_WEBHOOK_URL:-}
+      DISCORD_BOT_NAME: ${DISCORD_BOT_NAME:-Workload Watchdog}
     depends_on:
       db:
         condition: service_healthy
