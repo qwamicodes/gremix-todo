@@ -1,0 +1,17 @@
+node_modules
+build
+dist
+.env*
+!.env.example
+coverage
+*.log
+.DS_Store
+.vscode
+.git
+.gitignore
+README.md
+Dockerfile*
+docker-compose*
+.github
+.vercel
+vercel.json
