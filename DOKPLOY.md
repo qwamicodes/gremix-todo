@@ -37,6 +37,26 @@ Dokploy needs to provide the following environment variables:
 
 - `postgres_data` - Persistent PostgreSQL data storage
 
-## Health Checks
+## Startup Process
 
-The application includes health checks for the database to ensure proper startup order.
+The application includes retry logic in the entrypoint script to handle database connectivity issues:
+
+1. **Wait 15 seconds** for database to be fully ready
+2. **Run migrations** with up to 10 retry attempts
+3. **Start the application**
+
+## Troubleshooting
+
+### "Can't reach database server" Error
+
+If you see `P1001: Can't reach database server at db:5432`, this usually means:
+
+1. **Database not ready**: The PostgreSQL container takes time to initialize
+2. **Network issues**: Container networking in Dokploy might need time to establish
+3. **Environment variables**: Check that all required env vars are set correctly
+
+**Solution**: The updated entrypoint script includes automatic retry logic that should resolve this.
+
+### Alternative Deployment
+
+If the main `docker-compose.yml` doesn't work, try using `docker-compose.dokploy.yml` which has a simplified configuration without health checks.
