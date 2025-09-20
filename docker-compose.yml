@@ -10,7 +10,7 @@ services:
     restart: unless-stopped
 
   web:
-    image: ghcr.io/qwamicodes/gremix-remix:latest
+    image: ghcr.io/qwamicodes/gremix-todo:latest
     ports:
       - "2288:3000"
     environment:
