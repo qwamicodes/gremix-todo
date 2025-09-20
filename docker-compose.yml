@@ -17,7 +17,8 @@ services:
     restart: unless-stopped
 
   web:
-    build: .
+    # build: .
+    image: ghcr.io/qwamicodes/gremix-remix:latest
     ports:
       - "2288:3000"
     env_file:
