@@ -1,0 +1,128 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  test-and-build:
+    name: Test and Build
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpass
+          POSTGRES_DB: todolist_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U testuser -d todolist_test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DATABASE_URL: postgresql://testuser:testpass@localhost:5432/todolist_test
+      COOKIE_SECRET: test-cookie-secret-for-ci
+      BASE_URL: http://localhost:3000
+      WEBHOOK_URL: ""
+      DISCORD_WEBHOOK_URL: ""
+      DISCORD_BOT_NAME: CI-Bot
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: yarn prisma generate
+
+      - name: Run database migrations
+        run: yarn prisma migrate deploy
+
+      - name: Run linting
+        run: yarn lint
+
+      - name: Run type checking
+        run: yarn typecheck
+
+      - name: Build application
+        run: yarn build
+
+      - name: Build Docker image
+        run: docker build -t todolist:${{ github.sha }} .
+
+      - name: Test Docker image
+        run: |
+          # Start the container in the background
+          docker run -d --name test-container \
+            -e DATABASE_URL="${{ env.DATABASE_URL }}" \
+            -e COOKIE_SECRET="${{ env.COOKIE_SECRET }}" \
+            -e BASE_URL="${{ env.BASE_URL }}" \
+            --network host \
+            todolist:${{ github.sha }}
+          
+          # Wait for the container to start
+          sleep 10
+          
+          # Check if the container is running
+          docker ps | grep test-container
+          
+          # Clean up
+          docker stop test-container
+          docker rm test-container
+
+  # Optional: Deploy job that runs only on master branch pushes
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: test-and-build
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build and tag Docker image for deployment
+        run: |
+          docker build -t todolist:latest -t todolist:${{ github.sha }} .
+          echo "Docker image built successfully"
+
+      # Uncomment and configure the following steps for actual deployment
+      # - name: Login to Docker Hub
+      #   uses: docker/login-action@v3
+      #   with:
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # - name: Push to Docker Hub
+      #   run: |
+      #     docker push todolist:latest
+      #     docker push todolist:${{ github.sha }}
+
+      # - name: Deploy to production server
+      #   uses: appleboy/ssh-action@v1.0.0
+      #   with:
+      #     host: ${{ secrets.HOST }}
+      #     username: ${{ secrets.USERNAME }}
+      #     key: ${{ secrets.KEY }}
+      #     script: |
+      #       cd /path/to/app
+      #       docker-compose pull
+      #       docker-compose up -d
